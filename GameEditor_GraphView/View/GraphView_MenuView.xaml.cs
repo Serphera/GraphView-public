@@ -42,6 +42,7 @@ namespace GameEditor_GraphView.View {
             if (vm == null) {
                 return;
             }
+
             Point pos = e.GetPosition(sender as Canvas);
 
             pos.X -= vm.Camera.GetTransform(0, 0);

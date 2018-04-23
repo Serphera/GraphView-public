@@ -5,7 +5,7 @@ using System.Windows;
 namespace EditorLibrary {
 
     [Serializable]
-    class Camera : INotifyPropertyChanged {
+    public class Camera : INotifyPropertyChanged {
 
             //TODO: Remove once solution is integrated with main project
 
@@ -17,7 +17,7 @@ namespace EditorLibrary {
             [field: NonSerialized]
             public event PropertyChangedEventHandler PropertyChanged;
 
-            protected virtual void OnPropertyChanged(string propertyName) {
+            public virtual void OnPropertyChanged(string propertyName) {
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
 
@@ -40,12 +40,12 @@ namespace EditorLibrary {
                 //Console.WriteLine("Camera Transform Matrix Created");
             }
 
-            internal double GetTransform(int y, int x) {
+            public double GetTransform(int y, int x) {
 
                 return this.transformMatrix[y][x];
             }
 
-            internal void SetTransform(double x, double y) {
+            public void SetTransform(double x, double y) {
 
                 transformMatrix[0][0] = x;
                 transformMatrix[0][1] = y;
@@ -56,7 +56,7 @@ namespace EditorLibrary {
                 OnPropertyChanged("transformMatrix");
             }
             //Input should be canvas actualWidth
-            protected void SetFrustrum(double x, double y) {
+            public void SetFrustrum(double x, double y) {
 
                 //Max
                 frustrumMatrix[0] = (transformMatrix[0][0] + margin) + x;
@@ -69,7 +69,7 @@ namespace EditorLibrary {
                 //Console.WriteLine("Camera Frustrum Set!");
             }
 
-            internal double GetFrustrum(int pos) {
+            public double GetFrustrum(int pos) {
                 return this.frustrumMatrix[pos];
             }
 

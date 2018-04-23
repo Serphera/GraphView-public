@@ -43,7 +43,7 @@ namespace GameEditor_GraphView
         }
 
 
-        private BezierCurveV2(BezierCurveV2 curve, TestingCamera cam) {
+        private BezierCurveV2(BezierCurveV2 curve, Camera cam) {
 
             double scale = cam.GetScale;
             _points = new List<Point>();
@@ -137,7 +137,7 @@ namespace GameEditor_GraphView
         }
 
 
-        public static BezierCurveV2 ScaleAdjusted(BezierCurveV2 curve, TestingCamera cam) {
+        public static BezierCurveV2 ScaleAdjusted(BezierCurveV2 curve, Camera cam) {
 
             return new BezierCurveV2(curve, cam);
         }

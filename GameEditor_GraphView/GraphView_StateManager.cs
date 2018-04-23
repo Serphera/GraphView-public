@@ -22,6 +22,8 @@ using System.Drawing.Imaging;
 using System.Windows;
 using System.Windows.Input;
 
+using EditorLibrary;
+
 namespace GameEditor_GraphView {
 
     class GraphView_StateManager : StateManager {
@@ -264,8 +266,8 @@ namespace GameEditor_GraphView {
             pList.Add(new System.Windows.Point(700, 400));
             pList.Add(new System.Windows.Point(900, 350));
 
-            // TODO: Replace testingCamera with Camera once integrated with GameEditor
-            _GraphViewModel.Camera = new TestingCamera();
+            // TODO: Replace Camera with Camera once integrated with GameEditor
+            _GraphViewModel.Camera = new Camera();
             _GraphViewModel.Camera.SetTransform(0, 0);
 
             BezierCurveModelItemV2 item = new BezierCurveModelItemV2(new BezierCurveV2(pList));

@@ -28,7 +28,7 @@ namespace GameEditor_GraphView.ViewModel {
 
 
         internal Canvas _Canvas;
-        private TestingCamera camera;
+        private Camera camera;
         private CurveGraphModel modelitems;
         private ObservableCollection<FrameworkElement> items;       
         
@@ -69,7 +69,7 @@ namespace GameEditor_GraphView.ViewModel {
 
         public CurveGraphModel ModelItems { get { return modelitems; } set { modelitems = value; } }
 
-        public TestingCamera Camera { get { return this.camera; } set { this.camera = value; } }
+        public Camera Camera { get { return this.camera; } set { this.camera = value; } }
 
 
         public ObservableCollection<FrameworkElement> Items {

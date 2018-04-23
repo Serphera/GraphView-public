@@ -22,6 +22,8 @@ using SharpDX.WIC;
 using SharpDX.DXGI;
 using SharpDX.Windows;
 
+using EditorLibrary;
+
 
 using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
@@ -509,7 +511,7 @@ namespace GameEditor_GraphView {
         }
 
 
-        private Matrix CalculateWorldTransform(TestingCamera camera) {
+        private Matrix CalculateWorldTransform(Camera camera) {
 
             return Matrix.Scaling(new Vector3(1.0f / (float)camera.GetScale, 1.0f / (float)camera.GetScale, 1.0f)) *
                         Matrix.Translation(new Vector3(-(float)camera.GetTransform(0, 0), -(float)camera.GetTransform(0, 1), 0)) *

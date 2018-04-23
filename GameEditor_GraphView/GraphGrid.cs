@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Windows.Shapes;
 using System.Windows;
 
+using EditorLibrary;
+
 namespace GameEditor_GraphView {
     class GraphGrid {
 
@@ -25,7 +27,7 @@ namespace GameEditor_GraphView {
         }
 
 
-        public GraphGrid ScaleAdjusted(double scale, TestingCamera cam = null) {
+        public GraphGrid ScaleAdjusted(double scale, Camera cam = null) {
 
             //TODO: switch to this when camera is hooked up
             //GraphGrid scaledGrid = new GraphGrid(DrawGrid.Draw(cam.GetMatrix, 1000, 1000, scale));

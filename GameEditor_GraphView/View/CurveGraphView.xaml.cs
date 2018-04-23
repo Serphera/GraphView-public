@@ -20,7 +20,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Timers;
 
-
+using EditorLibrary;
 using GameEditor_GraphView.Model;
 using GameEditor_GraphView.ViewModel;
 
@@ -52,8 +52,8 @@ namespace GameEditor_GraphView.View {
             pList.Add(new Point(900, 350));
             //
 
-            //TODO: Replace testingCamera with Camera once integrated with GameEditor
-            _CurveGraphViewModel.Camera = new TestingCamera();
+            //TODO: Replace Camera with Camera once integrated with GameEditor
+            _CurveGraphViewModel.Camera = new Camera();
             _CurveGraphViewModel.Camera.SetTransform(0, 0);
 
             BezierCurveModelItemV2 item = new BezierCurveModelItemV2(new BezierCurveV2(pList));

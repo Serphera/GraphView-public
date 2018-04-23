@@ -7,6 +7,7 @@ using System.Windows.Shapes;
 using System.Windows.Controls;
 using System.Windows;
 
+using EditorLibrary;
 using GameEditor_GraphView.Model;
 
 
@@ -14,7 +15,7 @@ namespace GameEditor_GraphView {
     static class DrawGrid {
 
 
-        public static GraphGrid RenderGrid(CurveGraphModel model, TestingCamera cam = null) {
+        public static GraphGrid RenderGrid(CurveGraphModel model, Camera cam = null) {
 
             GraphGrid grid = Draw(model, cam);
 
@@ -22,7 +23,7 @@ namespace GameEditor_GraphView {
         }
 
 
-        public static GraphGrid Draw(CurveGraphModel model, TestingCamera cam) {
+        public static GraphGrid Draw(CurveGraphModel model, Camera cam) {
 
             List<FrameworkElement> list = new List<FrameworkElement>();
             List<FrameworkElement> numH = new List<FrameworkElement>();

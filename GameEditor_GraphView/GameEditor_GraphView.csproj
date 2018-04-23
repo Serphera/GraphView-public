@@ -100,7 +100,6 @@
     <Compile Include="Model\BezierCurveModelItemV2.cs" />
     <Compile Include="Model\CurveGraphModel.cs" />
     <Compile Include="SelectedItemAdorner.cs" />
-    <Compile Include="TestingCamera.cs" />
     <Compile Include="ToolHandler.cs" />
     <Compile Include="ViewModel\CurveGraphViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
@@ -185,7 +184,7 @@
     <Folder Include="Shaders\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Lerp.Math\EditorLibrary.csproj">
+    <ProjectReference Include="..\EditorLibrary\EditorLibrary.csproj">
       <Project>{fcd3cbbc-a9f8-4abf-b1d4-184d78ae30c0}</Project>
       <Name>EditorLibrary</Name>
     </ProjectReference>

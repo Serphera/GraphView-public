@@ -14,7 +14,7 @@ namespace GameEditor_GraphView
 {
     class DrawGraphV2 {
 
-        public static List<Point> Draw(BezierCurveV2 curve, TestingCamera cam) {
+        public static List<Point> Draw(BezierCurveV2 curve, Camera cam) {
 
             double[] offset = new double[] { cam.GetTransform(0, 0), cam.GetTransform(0, 1) };
             double scale = cam.GetScale;
@@ -94,7 +94,7 @@ namespace GameEditor_GraphView
 
 
         /*
-        public static List<FrameworkElement> Draw(BezierCurveV2 curve, TestingCamera cam) {
+        public static List<FrameworkElement> Draw(BezierCurveV2 curve, Camera cam) {
 
             double[] offset = new double[] { cam.GetTransform(0, 0), cam.GetTransform(0, 1) };
             double scale = cam.GetScale;
