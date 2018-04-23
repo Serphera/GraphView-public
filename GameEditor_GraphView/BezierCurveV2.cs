@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Diagnostics;
 
+using EditorLibrary;
+
 namespace GameEditor_GraphView
 {
     public class BezierCurveV2
@@ -68,7 +70,7 @@ namespace GameEditor_GraphView
                 if (Points[i].X > pos.X) {
 
                     delta = pos.X / Points[i].X;               
-                    insertPos = MathLerp.GetY(Points[i - 1], Points[i], pos.X);
+                    insertPos = LerpMath.GetY(Points[i - 1], Points[i], pos.X);
 
                     if ((pos.Y + 20) > insertPos.Y) {
 
@@ -113,15 +115,15 @@ namespace GameEditor_GraphView
 
                     case 1:
 
-                        insertPoints.Add(MathLerp.Lerp(keyframes[i + modifier - 1], keyframes[i + modifier], 0.5));
+                        insertPoints.Add(LerpMath.Lerp(keyframes[i + modifier - 1], keyframes[i + modifier], 0.5));
                         keyframes.InsertRange(i  + modifier, insertPoints);
                         modifier += 1;
                         break;
 
                     case 2:
 
-                        insertPoints.Add(MathLerp.Lerp(keyframes[i + modifier - 1], keyframes[i + modifier], 0.30));
-                        insertPoints.Add(MathLerp.Lerp(keyframes[i + modifier - 1], keyframes[i + modifier], 0.70));
+                        insertPoints.Add(LerpMath.Lerp(keyframes[i + modifier - 1], keyframes[i + modifier], 0.30));
+                        insertPoints.Add(LerpMath.Lerp(keyframes[i + modifier - 1], keyframes[i + modifier], 0.70));
                         keyframes.InsertRange(i + modifier, insertPoints);
                         modifier += 2;
                         break;

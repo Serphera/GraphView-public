@@ -14,6 +14,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using GameEditor_GraphView.ViewModel;
 
+using EditorLibrary;
+
 namespace GameEditor_GraphView.View {
 
 
@@ -54,7 +56,7 @@ namespace GameEditor_GraphView.View {
                     Point point1 = vm.ModelItems.Item.Curve.Points[i - 1];
                     Point point2 = vm.ModelItems.Item.Curve.Points[i];
 
-                    value = MathLerp.Lerp(point1, point2, pos.X / point2.X).Y;
+                    value = LerpMath.Lerp(point1, point2, pos.X / point2.X).Y;
                     break;
                 }
             }

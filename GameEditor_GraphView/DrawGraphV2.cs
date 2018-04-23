@@ -7,6 +7,8 @@ using System.Windows;
 using System.Windows.Shapes;
 using System.Windows.Media;
 using System.Windows.Controls;
+using EditorLibrary;
+
 
 namespace GameEditor_GraphView
 {
@@ -41,31 +43,31 @@ namespace GameEditor_GraphView
 
                             if (lineSmoothness == 1) {
 
-                                Point lerp1 = MathLerp.Lerp(_Curve.Points[multiplier], _Curve.Points[1 + multiplier], steps);
-                                Point lerp2 = MathLerp.Lerp(_Curve.Points[1 + multiplier], _Curve.Points[2 + multiplier], steps);
+                                Point lerp1 = LerpMath.Lerp(_Curve.Points[multiplier], _Curve.Points[1 + multiplier], steps);
+                                Point lerp2 = LerpMath.Lerp(_Curve.Points[1 + multiplier], _Curve.Points[2 + multiplier], steps);
 
-                                Point lerp4 = MathLerp.Lerp(lerp1, lerp2, steps);
+                                Point lerp4 = LerpMath.Lerp(lerp1, lerp2, steps);
 
                                 lerpList.Add(lerp4);
                             }
                             else {
 
-                                Point lerp1 = MathLerp.Lerp(_Curve.Points[multiplier], _Curve.Points[1 + (multiplier)], steps);
-                                Point lerp2 = MathLerp.Lerp(_Curve.Points[1 + multiplier], _Curve.Points[2 + multiplier], steps);
+                                Point lerp1 = LerpMath.Lerp(_Curve.Points[multiplier], _Curve.Points[1 + (multiplier)], steps);
+                                Point lerp2 = LerpMath.Lerp(_Curve.Points[1 + multiplier], _Curve.Points[2 + multiplier], steps);
 
-                                Point lerp3 = MathLerp.Lerp(_Curve.Points[2 + multiplier], _Curve.Points[3 + multiplier], steps);
+                                Point lerp3 = LerpMath.Lerp(_Curve.Points[2 + multiplier], _Curve.Points[3 + multiplier], steps);
 
-                                Point lerp4 = MathLerp.Lerp(lerp1, lerp2, steps);
-                                Point lerp5 = MathLerp.Lerp(lerp2, lerp3, steps);
+                                Point lerp4 = LerpMath.Lerp(lerp1, lerp2, steps);
+                                Point lerp5 = LerpMath.Lerp(lerp2, lerp3, steps);
 
-                                Point lerp6 = MathLerp.Lerp(lerp4, lerp5, steps);
+                                Point lerp6 = LerpMath.Lerp(lerp4, lerp5, steps);
 
                                 lerpList.Add(lerp6);
                             }
                         }
                         else {
 
-                            lerpList.Add(MathLerp.Lerp(_Curve.Points[multiplier], _Curve.Points[multiplier + 1], steps));
+                            lerpList.Add(LerpMath.Lerp(_Curve.Points[multiplier], _Curve.Points[multiplier + 1], steps));
                         }
 
                         if (scale < 0.5) {
@@ -123,31 +125,31 @@ namespace GameEditor_GraphView
 
                             if (lineSmoothness == 1) {
 
-                                Point lerp1 = MathLerp.Lerp(_Curve.Points[multiplier], _Curve.Points[1 + multiplier], steps);
-                                Point lerp2 = MathLerp.Lerp(_Curve.Points[1 + multiplier], _Curve.Points[2 + multiplier], steps);
+                                Point lerp1 = LerpMath.Lerp(_Curve.Points[multiplier], _Curve.Points[1 + multiplier], steps);
+                                Point lerp2 = LerpMath.Lerp(_Curve.Points[1 + multiplier], _Curve.Points[2 + multiplier], steps);
 
-                                Point lerp4 = MathLerp.Lerp(lerp1, lerp2, steps);
+                                Point lerp4 = LerpMath.Lerp(lerp1, lerp2, steps);
 
                                 lerpList.Add(lerp4);
                             }
                             else {
 
-                                Point lerp1 = MathLerp.Lerp(_Curve.Points[multiplier], _Curve.Points[1 + (multiplier)], steps);
-                                Point lerp2 = MathLerp.Lerp(_Curve.Points[1 + multiplier], _Curve.Points[2 + multiplier], steps);
+                                Point lerp1 = LerpMath.Lerp(_Curve.Points[multiplier], _Curve.Points[1 + (multiplier)], steps);
+                                Point lerp2 = LerpMath.Lerp(_Curve.Points[1 + multiplier], _Curve.Points[2 + multiplier], steps);
 
-                                Point lerp3 = MathLerp.Lerp(_Curve.Points[2 + multiplier], _Curve.Points[3 + multiplier], steps);
+                                Point lerp3 = LerpMath.Lerp(_Curve.Points[2 + multiplier], _Curve.Points[3 + multiplier], steps);
 
-                                Point lerp4 = MathLerp.Lerp(lerp1, lerp2, steps);
-                                Point lerp5 = MathLerp.Lerp(lerp2, lerp3, steps);
+                                Point lerp4 = LerpMath.Lerp(lerp1, lerp2, steps);
+                                Point lerp5 = LerpMath.Lerp(lerp2, lerp3, steps);
 
-                                Point lerp6 = MathLerp.Lerp(lerp4, lerp5, steps);
+                                Point lerp6 = LerpMath.Lerp(lerp4, lerp5, steps);
 
                                 lerpList.Add(lerp6);
                             }
                         }
                         else {
 
-                            lerpList.Add(MathLerp.Lerp(_Curve.Points[multiplier], _Curve.Points[multiplier + 1], steps));
+                            lerpList.Add(LerpMath.Lerp(_Curve.Points[multiplier], _Curve.Points[multiplier + 1], steps));
                         }
 
                         if (scale < 0.5) {

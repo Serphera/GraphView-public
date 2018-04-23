@@ -17,6 +17,7 @@ using System.Collections.Specialized;
 using System.Timers;
 
 
+using EditorLibrary;
 
 using GameEditor_GraphView;
 using GameEditor_GraphView.Model;
@@ -163,7 +164,7 @@ namespace GameEditor_GraphView.ViewModel {
                 Point pos;
                 var item = Items[0];
 
-                if (selectedPos.Count > 1) { pos = MathLerp.CalculateAverage(selectedPos); }
+                if (selectedPos.Count > 1) { pos = LerpMath.CalculateAverage(selectedPos); }
                 else { pos = selectedPos[0]; }
 
                 var myAdornerLayer = AdornerLayer.GetAdornerLayer(item);
@@ -178,7 +179,7 @@ namespace GameEditor_GraphView.ViewModel {
                             var listItem = Items[j];
                             Point itemPos = camera.OffsetPosition(new Point(Canvas.GetLeft(listItem), Canvas.GetTop(listItem)));
 
-                            if (MathLerp.CalculateDelta(selectedPos[i].X, itemPos.X) <= 2.5 && MathLerp.CalculateDelta(selectedPos[i].Y, itemPos.Y) <= 2.5) {
+                            if (LerpMath.CalculateDelta(selectedPos[i].X, itemPos.X) <= 2.5 && LerpMath.CalculateDelta(selectedPos[i].Y, itemPos.Y) <= 2.5) {
 
                                 RenderSelection(listItem, AdornerLayer.GetAdornerLayer(item));
                                 break;
@@ -257,11 +258,11 @@ namespace GameEditor_GraphView.ViewModel {
 
             if (!MiddleMouseUsed) {
 
-                dest = MathLerp.CalculateDelta(new Point(dragOrigin[0], dragOrigin[1]), new Point(dragEnd[0], dragEnd[1]), false, true);
+                dest = LerpMath.CalculateDelta(new Point(dragOrigin[0], dragOrigin[1]), new Point(dragEnd[0], dragEnd[1]), false, true);
             }
             else {
 
-                dest = MathLerp.CalculateDelta(new Point(dragOrigin[2], dragOrigin[3]), new Point(dragEnd[0], dragEnd[1]), false, true);
+                dest = LerpMath.CalculateDelta(new Point(dragOrigin[2], dragOrigin[3]), new Point(dragEnd[0], dragEnd[1]), false, true);
                 double offsetMultiplier = 0.55;
 
                 dest = new Point(
@@ -351,8 +352,8 @@ namespace GameEditor_GraphView.ViewModel {
 
                 if (dragBox != null) {
 
-                    double width = MathLerp.CalculateDelta(dragOrigin[0], dragEnd[0]);
-                    double height = MathLerp.CalculateDelta(dragOrigin[1], dragEnd[1]);
+                    double width = LerpMath.CalculateDelta(dragOrigin[0], dragEnd[0]);
+                    double height = LerpMath.CalculateDelta(dragOrigin[1], dragEnd[1]);
 
                     width = (width < 0) ? width * -1 : width;
                     height = (height < 0) ? height * -1 : height;
@@ -374,8 +375,8 @@ namespace GameEditor_GraphView.ViewModel {
                     rect.Opacity = 0.4;
                     rect.Name = "dragArea";
 
-                    rect.Width = MathLerp.CalculateDelta(dragOrigin[0], dragEnd[0]);
-                    rect.Height = MathLerp.CalculateDelta(dragOrigin[1], dragEnd[1]);
+                    rect.Width = LerpMath.CalculateDelta(dragOrigin[0], dragEnd[0]);
+                    rect.Height = LerpMath.CalculateDelta(dragOrigin[1], dragEnd[1]);
 
                     Items.Add(rect);
                     dragBox = rect;
@@ -409,7 +410,7 @@ namespace GameEditor_GraphView.ViewModel {
 
                             if (selectedPos.Count > 1) {
 
-                                Point origin = MathLerp.CalculateAverage(selectedPos);
+                                Point origin = LerpMath.CalculateAverage(selectedPos);
                                 dragOrigin[0] = origin.X;
                                 dragOrigin[1] = origin.Y;
                             }
@@ -507,7 +508,7 @@ namespace GameEditor_GraphView.ViewModel {
 
                         if (oldPosition.X != 0) {
 
-                            Point delta = MathLerp.CalculateDelta
+                            Point delta = LerpMath.CalculateDelta
                                 (
                                 oldPosition, 
                                 Mouse.GetPosition(Application.Current.MainWindow), 
@@ -566,8 +567,8 @@ namespace GameEditor_GraphView.ViewModel {
 
                         if (selectedPos.Count > 1) {
 
-                            Point avgPosition = MathLerp.CalculateAverage(selectedPos);
-                            Point offset = MathLerp.CalculateDelta(
+                            Point avgPosition = LerpMath.CalculateAverage(selectedPos);
+                            Point offset = LerpMath.CalculateDelta(
                                 modelitems.Item.Curve.Points[selectedItems[0]],
                                 avgPosition,
                                 true
@@ -596,8 +597,8 @@ namespace GameEditor_GraphView.ViewModel {
                 _shift = false;
             }
             //Drag selection
-            else if (_dragDropped && (3 * camera.GetScale) < MathLerp.CalculateDelta(dragOrigin[0], dragEnd[0]) 
-                || (3 * camera.GetScale) < MathLerp.CalculateDelta(dragOrigin[1], dragEnd[1])) {
+            else if (_dragDropped && (3 * camera.GetScale) < LerpMath.CalculateDelta(dragOrigin[0], dragEnd[0]) 
+                || (3 * camera.GetScale) < LerpMath.CalculateDelta(dragOrigin[1], dragEnd[1])) {
 
                 if ((DateTime.Now - _time).Milliseconds > 100) {
 
