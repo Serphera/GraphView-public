@@ -16,7 +16,6 @@ namespace GameEditor_GraphView
         private List<Point> _points;
         private List<Point> _Original;
 
-
         //0: linear, 1: semi-linear, 2: full bezier
         private List<int> _smoothness;
 
@@ -32,23 +31,10 @@ namespace GameEditor_GraphView
             _smoothness = new List<int>();
             _Original = new List<Point>(points);
 
-            //TODO: Remove once testing is done
-            
             for (int i = 0; i < points.Count - 1; i++) {
 
                 _smoothness.Add(0);
-
-                /*
-                if (i % 2 == 0) {
-                    _smoothness.Add(0);
-                }
-                else {
-                    _smoothness.Add(1);
-                }           
-                */
             }
-
-            //
 
             _points = KeyFramesToCurve(points);
             scale = new double[] { 1, 1, 1 };

@@ -434,7 +434,8 @@ namespace GameEditor_GraphView {
             try {
 
                 // TODO: Create method to change start/end coords if the angle is too tight, to avoid dissappearing line
-                var points = ((GameEditor_GraphView.ViewModel.CurveGraphViewModel)manager.ViewModel).ModelItems.Item.Curve.Points;
+                //var points = ((GameEditor_GraphView.ViewModel.CurveGraphViewModel)manager.ViewModel).ModelItems.Item.Curve.Points;
+                //var points = DrawGraphV2.Draw(((ViewModel.CurveGraphViewModel)manager.ViewModel).ModelItems.Item.Curve.Original)
                 vertices = null;
 
                 // Number of points minus 1, times the numbers of points for 2 triangles, 

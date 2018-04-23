@@ -89,7 +89,6 @@
     <Compile Include="BezierCurveV2.cs" />
     <Compile Include="CurveToolAdorner.cs" />
     <Compile Include="D3Drenderer.cs" />
-    <Compile Include="D3D_Resource.cs" />
     <Compile Include="DragItemGeneric.cs" />
     <Compile Include="DrawGraphV2.cs" />
     <Compile Include="DrawInteractiveUI.cs" />
@@ -180,19 +179,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Blur.fx" />
-    <Content Include="MiniCube.fx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Resource Include="D3Drenderer.txt" />
-    <Content Include="pixelShader.hlsl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Smooth.fx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="vertexShader.hlsl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>

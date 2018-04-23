@@ -70,11 +70,6 @@ namespace GameEditor_GraphView.View {
             
         }
 
-        private void UpdateLoop(object sender,  EventArgs e) {
-
-            
-        }
-
 
         private void Canvas_Loaded(object sender, RoutedEventArgs e) {
 

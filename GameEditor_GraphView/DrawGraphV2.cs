@@ -10,7 +10,7 @@ using System.Windows.Controls;
 
 namespace GameEditor_GraphView
 {
-    static class DrawGraphV2 {
+    class DrawGraphV2 {
 
         public static List<Point> Draw(BezierCurveV2 curve, TestingCamera cam) {
 
