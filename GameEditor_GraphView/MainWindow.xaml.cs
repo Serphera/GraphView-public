@@ -20,6 +20,8 @@ using GameEditor_GraphView.View;
 using GameEditor_GraphView.ViewModel;
 using GameEditor_GraphView.Model;
 
+using EditorLibrary;
+
 
 namespace GameEditor_GraphView {
     

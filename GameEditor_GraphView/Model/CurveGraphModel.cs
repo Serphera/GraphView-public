@@ -9,6 +9,6 @@ using System.Threading.Tasks;
 namespace GameEditor_GraphView.Model {
     class CurveGraphModel {
 
-        public BezierCurveModelItemV2 Item { get; set; }
+        public BezierCurveModelItem Item { get; set; }
     }
 }

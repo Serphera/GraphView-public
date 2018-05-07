@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
+using System;
 
 
-namespace EditorLibrary
-{
+namespace EditorLibrary {
     public static class LerpMath {
 
         //Linear Interpolation
@@ -137,6 +137,65 @@ namespace EditorLibrary
             delta = (invert) ? delta * -1 : delta;
 
             return delta;
+        }
+
+
+        /// <summary>
+        /// Rotates object around center
+        /// </summary>
+        /// <param name="points"></param>
+        /// <param name="angle"></param>
+        /// <returns></returns>
+        public static List<Point> RotateAroundCenter(List<Point> points, double angle) {
+
+            var sin = Math.Sin(angle);
+            var cos = Math.Cos(angle);
+            double xTotal = 0;
+            double yTotal = 0;
+
+            for (int i = 0; i < points.Count; i++) {
+
+                xTotal += points[i].X;
+                yTotal += points[i].Y;
+            }
+
+            var centre = new Point(xTotal / points.Count, yTotal / points.Count);
+
+            var maxX = points[0].X;
+            var minX = points[0].X;
+            var maxY = points[0].Y;
+            var minY = points[0].Y;
+
+            for (int i = 0; i < points.Count; i++) {
+
+                if (maxX < points[i].X) {
+                    maxX = points[i].X;
+                }
+                if (maxY < points[i].Y) {
+                    maxY = points[i].Y;
+                }
+                if (minX > points[i].X) {
+                    minX = points[i].X;
+                }
+                if (minY > points[i].Y) {
+                    minY = points[i].Y;
+                }
+            }
+
+            centre = new Point(minX + (maxX - minX), minY + (maxY - minY));
+
+
+            for (int i = 0; i < points.Count; i++) {
+
+                points[i] = new Point(points[i].X - centre.X, points[i].Y - centre.Y);
+
+                var xDelta = points[i].X * cos - points[i].Y * sin;
+                var yDelta = points[i].Y * cos + points[i].X * sin;
+
+                points[i] = new Point(xDelta + centre.X, yDelta + centre.Y);
+            }
+
+            return points;
         }
     }
 }

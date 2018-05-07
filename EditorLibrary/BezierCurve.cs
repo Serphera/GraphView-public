@@ -4,7 +4,7 @@ using System.Windows;
 
 namespace EditorLibrary {
 
-    class BezierCurve {
+    public class BezierCurve {
 
             private double[] scale;
 
@@ -36,9 +36,8 @@ namespace EditorLibrary {
             }
 
 
-            private BezierCurve(BezierCurve curve, Camera cam) {
+            private BezierCurve(BezierCurve curve, double scale) {
 
-                double scale = cam.GetScale;
                 _points = new List<Point>();
 
                 _smoothness = new List<int>(curve.Smoothness);
@@ -132,7 +131,7 @@ namespace EditorLibrary {
 
             public static BezierCurve ScaleAdjusted(BezierCurve curve, Camera cam) {
 
-                return new BezierCurve(curve, cam);
+                return new BezierCurve(curve, cam.GetScale);
             }
 
     }

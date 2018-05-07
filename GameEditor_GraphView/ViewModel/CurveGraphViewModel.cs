@@ -206,11 +206,11 @@ namespace GameEditor_GraphView.ViewModel {
         private void RenderDragHandles(FrameworkElement element, AdornerLayer layer, Point position, int type = 0) {
 
             List<Adorner> list = new List<Adorner>();
-            list.Add(new CurveToolAdorner(element, this, position, "cross"));
-            list.Add(new CurveToolAdorner(element, this, position, "left", type));
-            list.Add(new CurveToolAdorner(element, this, position, "top", type));
-            list.Add(new CurveToolAdorner(element, this, position, "right", type));
-            list.Add(new CurveToolAdorner(element, this, position, "bottom", type));
+            list.Add(new ToolAdorner(element, this, position, "cross"));
+            list.Add(new ToolAdorner(element, this, position, "left", type));
+            list.Add(new ToolAdorner(element, this, position, "top", type));
+            list.Add(new ToolAdorner(element, this, position, "right", type));
+            list.Add(new ToolAdorner(element, this, position, "bottom", type));
 
             for (int i = 0; i < list.Count; i++) {
                 
@@ -390,7 +390,7 @@ namespace GameEditor_GraphView.ViewModel {
         }
         
 
-        public void OnMouseDown(object sender, MouseButtonEventArgs e) {
+        public override void OnMouseDown(object sender, MouseButtonEventArgs e) {
 
             CheckModifier();
 
@@ -400,9 +400,9 @@ namespace GameEditor_GraphView.ViewModel {
                 case 0:
 
                     //Toolhandle
-                    if (e.ChangedButton == MouseButton.Left && e.OriginalSource.GetType() == typeof(CurveToolAdorner)) {
+                    if (e.ChangedButton == MouseButton.Left && e.OriginalSource.GetType() == typeof(ToolAdorner)) {
 
-                        CurveToolAdorner rect = (CurveToolAdorner)e.OriginalSource;
+                        ToolAdorner rect = (ToolAdorner)e.OriginalSource;
 
                         if (Regex.IsMatch(rect.Name, "(left)?(right)?(top)?(bottom)?")) {
 
@@ -428,7 +428,7 @@ namespace GameEditor_GraphView.ViewModel {
 
                     //Drag select
                     if (e.ChangedButton == MouseButton.Left && !(e.OriginalSource.GetType() == typeof(Rectangle) &&
-                        !(e.OriginalSource.GetType() == typeof(CurveToolAdorner)))) {
+                        !(e.OriginalSource.GetType() == typeof(ToolAdorner)))) {
 
                         _DragSelection = true;
                         _time = DateTime.Now;
@@ -467,7 +467,7 @@ namespace GameEditor_GraphView.ViewModel {
                         Point pos = camera.OffsetPosition(e.GetPosition(_Canvas));
 
                         CurveGraphModel model = ModelItems;
-                        BezierCurveV2 curve = model.Item.Curve;
+                        BezierCurve curve = model.Item.Curve;
 
                         curve.InsertPoint(pos);
 

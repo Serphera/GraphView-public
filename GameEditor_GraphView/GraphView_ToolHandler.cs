@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using EditorLibrary;
+
 namespace GameEditor_GraphView {
     class GraphView_ToolHandler : ToolHandler {
 

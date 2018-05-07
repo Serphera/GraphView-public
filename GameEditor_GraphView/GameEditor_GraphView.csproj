@@ -86,26 +86,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="BezierCurveV2.cs" />
-    <Compile Include="CurveToolAdorner.cs" />
     <Compile Include="D3Drenderer.cs" />
-    <Compile Include="DragItemGeneric.cs" />
-    <Compile Include="DrawGraphV2.cs" />
+    <Compile Include="DrawGraph.cs" />
     <Compile Include="DrawInteractiveUI.cs" />
     <Compile Include="GraphView_StateManager.cs" />
     <Compile Include="GraphView_ToolHandler.cs" />
-    <Compile Include="ProjectStateManager.cs" />
-    <Compile Include="StateManager.cs" />
     <Compile Include="GraphGrid.cs" />
-    <Compile Include="Model\BezierCurveModelItemV2.cs" />
+    <Compile Include="Model\BezierCurveModelItem.cs" />
     <Compile Include="Model\CurveGraphModel.cs" />
     <Compile Include="SelectedItemAdorner.cs" />
-    <Compile Include="ToolHandler.cs" />
     <Compile Include="ViewModel\CurveGraphViewModel.cs" />
-    <Compile Include="ViewModel\ViewModelBase.cs" />
-    <Compile Include="View\CurveGraphView.xaml.cs">
-      <DependentUpon>CurveGraphView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="View\GraphView_CurveView.xaml.cs">
       <DependentUpon>GraphView_CurveView.xaml</DependentUpon>
     </Compile>
@@ -130,10 +120,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="View\CurveGraphView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="View\GraphView_CurveView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -148,7 +134,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GraphCurve.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

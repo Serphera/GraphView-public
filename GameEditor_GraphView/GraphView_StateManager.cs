@@ -270,7 +270,7 @@ namespace GameEditor_GraphView {
             _GraphViewModel.Camera = new Camera();
             _GraphViewModel.Camera.SetTransform(0, 0);
 
-            BezierCurveModelItemV2 item = new BezierCurveModelItemV2(new BezierCurveV2(pList));
+            BezierCurveModelItem item = new BezierCurveModelItem(new BezierCurve(pList));
 
             CurveGraphModel model = new CurveGraphModel();
             model.Item = item;
