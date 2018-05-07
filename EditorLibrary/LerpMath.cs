@@ -4,6 +4,7 @@ using System;
 
 
 namespace EditorLibrary {
+
     public static class LerpMath {
 
         //Linear Interpolation
