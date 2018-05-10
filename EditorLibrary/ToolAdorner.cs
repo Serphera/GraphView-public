@@ -184,15 +184,24 @@ namespace EditorLibrary {
 
             origin.X += 2.5;
             origin.Y += 2.5;
-            var edge = new Point(position.X - 18, position.Y);
-            var top = new Point(position.X, position.Y - 8);
-            var bottom = new Point(position.X, position.Y + 8);
+
+            var edge = new Point(position.X + 2, position.Y + 11.5);
+            var top = new Point(position.X + 18, position.Y + 2.5);
+            var bottom = new Point(position.X + 18, position.Y + 19.5);
 
             edge = GetPosition(angle, edge, origin);
             top = GetPosition(angle, top, origin);
             bottom = GetPosition(angle, bottom, origin);
 
+            // Offsets point position to be the centre of the hitbox
+            position.X += 11.5;
+            position.Y += 11.5;
+
             var finalPosition = GetPosition(angle, position, origin);
+
+            // Resets to correct position
+            finalPosition.X -= 11.5;
+            finalPosition.Y -= 11.5;
 
             shape.Points.Add(edge);
             shape.Points.Add(top);
@@ -236,12 +245,13 @@ namespace EditorLibrary {
             var sin = Math.Sin(angle);
             var cos = Math.Cos(angle);
 
+            // Sets origin as point to rotate around
             var delta = new Point(position.X - origin.X, position.Y - origin.Y);
 
-            double deltaX = delta.X * cos - delta.Y * sin;
-            double deltaY = delta.X * sin + delta.Y * cos;    
+            double newX = delta.X * cos - delta.Y * sin;
+            double newY = delta.X * sin + delta.Y * cos;    
 
-            return position = new Point(deltaX + origin.X, deltaY + origin.Y);
+            return position = new Point(newX + origin.X, newY + origin.Y);
         }
     }
 
