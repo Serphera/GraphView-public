@@ -17,17 +17,17 @@ using System.Text.RegularExpressions;
 
 namespace EditorLibrary {
 
-    class CurveToolAdorner : Adorner {
+    public class ToolAdorner : Adorner {
 
         private Point _Location;
         VisualCollection visualChildren;
         int _type = 0;
         private ViewModelBase _viewModel;
-        //public string _name;
+
         public Point offset { get; set; }
 
 
-        public CurveToolAdorner(UIElement adornedElement, ViewModelBase viewModel, Point position, string name, int type = 0) : base(adornedElement) {
+        public ToolAdorner(UIElement adornedElement, ViewModelBase viewModel, Point position, string name, int type = 0) : base(adornedElement) {
 
             visualChildren = new VisualCollection(this);
 
@@ -37,15 +37,15 @@ namespace EditorLibrary {
             _viewModel = viewModel;           
 
             // TODO: Might be a memory leak
-            this.MouseDown += new System.Windows.Input.MouseButtonEventHandler(curveAdorner_MouseDown);
+            MouseDown += new System.Windows.Input.MouseButtonEventHandler(curveAdorner_MouseDown);
         }
 
 
         public void UpdatePosition(Point location) {
 
             _Location = location;
-            this.InvalidateVisual();
-            this.InvalidateArrange();
+            InvalidateVisual();
+            InvalidateArrange();
         }
 
         //Redirects to viewModel
@@ -55,7 +55,7 @@ namespace EditorLibrary {
         }
 
 
-        private Rect BuildHitBox(Point origin) {
+        private void BuildHitBox(DrawingContext context, Point origin) {
 
             Rect rect = new Rect();
             rect.X = origin.X;
@@ -63,125 +63,87 @@ namespace EditorLibrary {
             rect.Height = 23;
             rect.Width = 23;
 
-            return rect;
+            Pen rectPen = new Pen(new SolidColorBrush(Colors.Black), 0.0);
+            SolidColorBrush rectBrush = new SolidColorBrush(Colors.Black);
+            rectBrush.Opacity = 0.2;
+
+            context.DrawRectangle(rectBrush, rectPen, rect);
         }
 
 
-        protected override void OnRender(DrawingContext drawingContext) {
-
-            SolidColorBrush arrowBrush = new SolidColorBrush(Colors.Red);            
-            SolidColorBrush rectBrush = new SolidColorBrush(Colors.Black);
-            rectBrush.Opacity = 0.0;
-
-            Pen arrowPen = new Pen(new SolidColorBrush(Colors.Blue), 1.0);
-            Pen rectPen = new Pen(new SolidColorBrush(Colors.Black), 0.0);
+        protected override void OnRender(DrawingContext context) {
 
             Point centre = _Location;
+            Point left = new Point(centre.X - 33, centre.Y - 9);
 
-            Point left;
-            Point top;
-            Point right;
-            Point bottom;
             Polygon shape = new Polygon();
+            Action<DrawingContext, Point, Point, Polygon, double> toolMethod = null;
+            double angle = 0;
 
-            switch (this.Name) {
+            switch (_type) {
+
+                case 0:
+
+                    toolMethod = MoveAdorner;
+                    break;
+
+                case 1:
+
+                    toolMethod = ScaleAdorner;
+                    break;
+
+                default:
+                    break;
+            }
+
+            switch (Name) {
 
                 case "cross":
 
-
                     left = new Point(centre.X - 30, centre.Y + 2.5);
-                    top = new Point(centre.X + 2.5, centre.Y - 25);
-                    right = new Point(centre.X + 33, centre.Y + 2.5);
-                    bottom = new Point(centre.X + 2.5, centre.Y + 30);
+                    Point top = new Point(centre.X + 2.5, centre.Y - 25);
+                    Point right = new Point(centre.X + 33, centre.Y + 2.5);
+                    Point bottom = new Point(centre.X + 2.5, centre.Y + 30);
 
-                    drawingContext.DrawLine(new Pen(new SolidColorBrush(Colors.Red), 1.0), left, right);
-                    drawingContext.DrawLine(new Pen(new SolidColorBrush(Colors.LightGreen), 1.0), top, bottom);
+                    context.DrawLine(new Pen(new SolidColorBrush(Colors.Red), 1.0), left, right);
+                    context.DrawLine(new Pen(new SolidColorBrush(Colors.LightGreen), 1.0), top, bottom);
                     return;
 
                 case "left":
 
-                    left = new Point(centre.X - 33, centre.Y - 9);
-                    Rect rLeft = BuildHitBox(left);
-
-                    shape.Points.Add(new Point(left.X + 3, left.Y + 11));
-                    shape.Points.Add(new Point(left.X + 18, left.Y + 4));
-                    shape.Points.Add(new Point(left.X + 18, left.Y + 18));
-
-                    drawingContext.DrawRectangle(rectBrush, rectPen, rLeft);
                     break;
 
                 case "top":
 
-                    top = new Point(centre.X - 9, centre.Y - 32);
-                    Rect rTop = BuildHitBox(top);
-
-                    shape.Points.Add(new Point(top.X + 11.5, top.Y + 3));
-                    shape.Points.Add(new Point(top.X + 3.5, top.Y + 18));
-                    shape.Points.Add(new Point(top.X + 19.5, top.Y + 18));
-
-                    drawingContext.DrawRectangle(rectBrush, rectPen, rTop);
+                    angle = Math.PI / 2;
                     break;
 
                 case "right":
 
-                    right = new Point(centre.X + 13, centre.Y - 9);
-                    Rect rRight = BuildHitBox(right);
-
-                    shape.Points.Add(new Point(right.X + 20, right.Y + 11));
-                    shape.Points.Add(new Point(right.X + 5, right.Y + 4));
-                    shape.Points.Add(new Point(right.X + 5, right.Y + 18));
-
-                    drawingContext.DrawRectangle(rectBrush, rectPen, rRight);
+                    angle = Math.PI;
                     break;
 
                 case "bottom":
 
-                    bottom = new Point(centre.X - 9, centre.Y + 16);
-                    Rect rBottom = BuildHitBox(new Point(bottom.X, bottom.Y));
-
-                    shape.Points.Add(new Point(bottom.X + 11.5, bottom.Y + 20));
-                    shape.Points.Add(new Point(bottom.X + 3.5, bottom.Y + 5));
-                    shape.Points.Add(new Point(bottom.X + 19.5, bottom.Y + 5));
-
-                    drawingContext.DrawRectangle(rectBrush, rectPen, rBottom);
+                    angle = (Math.PI * 3) / 2;
                     break;
 
                 default:
                     return;
             }
 
-            //Scale Adorner
-            if (_type == 1) {
+            toolMethod(context, left, centre, shape, angle);
+            DrawAdorner(context, shape);
+        }
 
-                double x;
-                double y;
 
-                for (int i = 1; i < shape.Points.Count - 1; i+= 2) {
+        private void DrawAdorner(DrawingContext context, Polygon shape) {
 
-                    if (shape.Points[i].X == shape.Points[i+1].X) {
-
-                        y = shape.Points[2].Y;
-                        x = shape.Points[0].X;
-
-                        shape.Points.Insert(3, new Point(x, y));
-                        shape.Points[0] = new Point(x, shape.Points[1].Y);
-                        break;
-                    }
-                    else if (shape.Points[i].Y == shape.Points[i].Y) {
-
-                        x = shape.Points[2].X;
-                        y = shape.Points[0].Y;
-
-                        shape.Points.Insert(3, new Point(x, y));
-                        shape.Points[0] = new Point(shape.Points[1].X, y);
-                        break;
-                    }
-                }               
-                
-            }
+            SolidColorBrush arrowBrush = new SolidColorBrush(Colors.Red);
+            Pen arrowPen = new Pen(new SolidColorBrush(Colors.Blue), 1.0);
 
             //Draws shape for the movement adorner
-            List<StreamGeometry> geoList = new List<StreamGeometry>();            
+            List<StreamGeometry> geoList = new List<StreamGeometry>();
             StreamGeometry streamGeometry = new StreamGeometry();
 
             using (StreamGeometryContext geometryContext = streamGeometry.Open()) {
@@ -212,10 +174,75 @@ namespace EditorLibrary {
 
             for (int i = 0; i < geoList.Count; i++) {
 
-                drawingContext.DrawGeometry(arrowBrush, arrowPen, geoList[i]);
+                context.DrawGeometry(arrowBrush, arrowPen, geoList[i]);
             }
 
         }
 
+
+        private void MoveAdorner(DrawingContext context, Point position, Point origin, Polygon shape, double angle) {
+
+            origin.X += 2.5;
+            origin.Y += 2.5;
+            var edge = new Point(position.X - 18, position.Y);
+            var top = new Point(position.X, position.Y - 8);
+            var bottom = new Point(position.X, position.Y + 8);
+
+            edge = GetPosition(angle, edge, origin);
+            top = GetPosition(angle, top, origin);
+            bottom = GetPosition(angle, bottom, origin);
+
+            var finalPosition = GetPosition(angle, position, origin);
+
+            shape.Points.Add(edge);
+            shape.Points.Add(top);
+            shape.Points.Add(bottom);
+
+            BuildHitBox(context, finalPosition);
+        }
+
+
+        private void ScaleAdorner(DrawingContext context, Point position, Point origin, Polygon shape, double angle) {
+
+            double x;
+            double y;
+
+            for (int i = 1; i < shape.Points.Count - 1; i += 2) {
+
+                if (shape.Points[i].X == shape.Points[i + 1].X) {
+
+                    y = shape.Points[2].Y;
+                    x = shape.Points[0].X;
+
+                    shape.Points.Insert(3, new Point(x, y));
+                    shape.Points[0] = new Point(x, shape.Points[1].Y);
+                    break;
+                }
+                else if (shape.Points[i].Y == shape.Points[i].Y) {
+
+                    x = shape.Points[2].X;
+                    y = shape.Points[0].Y;
+
+                    shape.Points.Insert(3, new Point(x, y));
+                    shape.Points[0] = new Point(shape.Points[1].X, y);
+                    break;
+                }
+            }
+        }
+
+
+        private Point GetPosition(double angle, Point position, Point origin) {
+
+            var sin = Math.Sin(angle);
+            var cos = Math.Cos(angle);
+
+            var delta = new Point(position.X - origin.X, position.Y - origin.Y);
+
+            double deltaX = delta.X * cos - delta.Y * sin;
+            double deltaY = delta.X * sin + delta.Y * cos;    
+
+            return position = new Point(deltaX + origin.X, deltaY + origin.Y);
+        }
     }
+
 }

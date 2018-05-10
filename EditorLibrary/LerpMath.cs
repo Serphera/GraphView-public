@@ -151,6 +151,7 @@ namespace EditorLibrary {
 
             var sin = Math.Sin(angle);
             var cos = Math.Cos(angle);
+
             double xTotal = 0;
             double yTotal = 0;
 

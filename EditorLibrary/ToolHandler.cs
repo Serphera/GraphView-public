@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EditorLibrary {
 
-    class ToolHandler {
+    public class ToolHandler {
 
         protected string name;
         public static int ActiveTool { get; set; }
