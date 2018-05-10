@@ -26,6 +26,13 @@ namespace EditorLibrary {
 
         public Point offset { get; set; }
 
+        enum Tool {
+
+            Move,
+            Scale,
+            Rotate
+        }
+
 
         public ToolAdorner(UIElement adornedElement, ViewModelBase viewModel, Point position, string name, int type = 0) : base(adornedElement) {
 
@@ -65,7 +72,7 @@ namespace EditorLibrary {
 
             Pen rectPen = new Pen(new SolidColorBrush(Colors.Black), 0.0);
             SolidColorBrush rectBrush = new SolidColorBrush(Colors.Black);
-            rectBrush.Opacity = 0.2;
+            rectBrush.Opacity = 0.0;
 
             context.DrawRectangle(rectBrush, rectPen, rect);
         }
@@ -80,14 +87,14 @@ namespace EditorLibrary {
             Action<DrawingContext, Point, Point, Polygon, double> toolMethod = null;
             double angle = 0;
 
-            switch (_type) {
+            switch ((Tool)_type) {
 
-                case 0:
+                case Tool.Move:
 
                     toolMethod = MoveAdorner;
                     break;
 
-                case 1:
+                case Tool.Scale:
 
                     toolMethod = ScaleAdorner;
                     break;
@@ -185,13 +192,9 @@ namespace EditorLibrary {
             origin.X += 2.5;
             origin.Y += 2.5;
 
-            var edge = new Point(position.X + 2, position.Y + 11.5);
-            var top = new Point(position.X + 18, position.Y + 2.5);
-            var bottom = new Point(position.X + 18, position.Y + 19.5);
-
-            edge = GetPosition(angle, edge, origin);
-            top = GetPosition(angle, top, origin);
-            bottom = GetPosition(angle, bottom, origin);
+            var edge = GetPosition(angle, new Point(position.X + 2, position.Y + 11.5), origin);
+            var top = GetPosition(angle, new Point(position.X + 18, position.Y + 2.5), origin);
+            var bottom = GetPosition(angle, new Point(position.X + 18, position.Y + 19.5), origin);
 
             // Offsets point position to be the centre of the hitbox
             position.X += 11.5;
@@ -213,30 +216,31 @@ namespace EditorLibrary {
 
         private void ScaleAdorner(DrawingContext context, Point position, Point origin, Polygon shape, double angle) {
 
-            double x;
-            double y;
+            origin.X += 2.5;
+            origin.Y += 2.5;
 
-            for (int i = 1; i < shape.Points.Count - 1; i += 2) {
+            var bLeft = GetPosition(angle, new Point(position.X + 2, position.Y + 19.5), origin);
+            var tLeft = GetPosition(angle, new Point(position.X + 2, position.Y + 2.5), origin);
+            var tRight = GetPosition(angle, new Point(position.X + 18, position.Y + 2.5), origin);
+            var bRight = GetPosition(angle, new Point(position.X + 18, position.Y + 19.5), origin);           
+            
+            // Offsets point position to be the centre of the hitbox
+            position.X += 11.5;
+            position.Y += 11.5;
 
-                if (shape.Points[i].X == shape.Points[i + 1].X) {
+            var finalPosition = GetPosition(angle, position, origin);
 
-                    y = shape.Points[2].Y;
-                    x = shape.Points[0].X;
+            // Resets to correct position
+            finalPosition.X -= 11.5;
+            finalPosition.Y -= 11.5;
 
-                    shape.Points.Insert(3, new Point(x, y));
-                    shape.Points[0] = new Point(x, shape.Points[1].Y);
-                    break;
-                }
-                else if (shape.Points[i].Y == shape.Points[i].Y) {
+            shape.Points.Add(bLeft);
+            shape.Points.Add(tLeft);
+            shape.Points.Add(tRight);
+            shape.Points.Add(bRight);
 
-                    x = shape.Points[2].X;
-                    y = shape.Points[0].Y;
 
-                    shape.Points.Insert(3, new Point(x, y));
-                    shape.Points[0] = new Point(shape.Points[1].X, y);
-                    break;
-                }
-            }
+            BuildHitBox(context, finalPosition);
         }
 
 
