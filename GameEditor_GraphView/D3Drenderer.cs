@@ -452,7 +452,55 @@ namespace GameEditor_GraphView {
                     Vector2 start = new Vector2((float)points[i].X, (float)points[i].Y);
                     Vector2 end = new Vector2((float)points[i + 1].X, (float)points[i + 1].Y);
 
+                    // Calculate the angle between start and end
+                    var tan = Math.Atan(((start.Y - end.Y) / (start.X - end.X)));
 
+                    List<System.Windows.Point> sList = new List<System.Windows.Point>();
+                    List<System.Windows.Point> eList = new List<System.Windows.Point>();
+
+                    float offset = 2.5f;
+
+                    sList.Add(new windows.Point(start.X, start.Y - offset));
+                    sList.Add(new windows.Point(start.X, start.Y + offset));
+
+                    eList.Add(new windows.Point(end.X, end.Y + offset));
+                    eList.Add(new windows.Point(end.X, end.Y - offset));
+
+                    sList = LerpMath.RotateAroundPoint(sList, new System.Windows.Point(start.X, start.Y), tan);
+                    eList = LerpMath.RotateAroundPoint(eList, new System.Windows.Point(end.X, end.Y), tan);
+
+
+
+                    // 2 triangles form one quad
+                    // Triangle 1
+                    vertices[index] = new Vector4((float)sList[0].X, (float)sList[0].Y, 1.0f, 1.0f);
+                    vertices[index + 1] = color;
+                    vertices[index + 2] = new Vector4(1.0f, 0.0f, 1.0f, 1.0f);
+
+                    vertices[index + 3] = new Vector4((float)sList[1].X, (float)sList[1].Y, 1.0f, 1.0f);
+                    vertices[index + 4] = color;
+                    vertices[index + 5] = new Vector4(0.0f, 0.0f, 1.0f, 1.0f);
+
+                    vertices[index + 6] = new Vector4((float)eList[0].X, (float)eList[0].Y, 1.0f, 1.0f);
+                    vertices[index + 7] = color;
+                    vertices[index + 8] = new Vector4(0.0f, 1.0f, 1.0f, 1.0f);
+
+                    //Triangle 2
+                    vertices[index + 9] = vertices[index + 6];
+                    vertices[index + 10] = color;
+                    vertices[index + 11] = vertices[index + 8];
+
+                    vertices[index + 15] = vertices[index];
+                    vertices[index + 16] = color;
+                    vertices[index + 17] = vertices[index + 2];
+
+                    vertices[index + 12] = new Vector4((float)eList[1].X, (float)eList[1].Y, 1.0f, 1.0f);
+                    vertices[index + 13] = color;
+                    vertices[index + 14] = new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+
+                    index += 18;
+
+                    /*
                     // 2 triangles form one quad
                     // Triangle 1
                     vertices[index] = new Vector4(start.X, start.Y - 2.5f, 1.0f, 1.0f);
@@ -481,6 +529,7 @@ namespace GameEditor_GraphView {
                     vertices[index + 14] = new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 
                     index += 18;
+                    */
                 }
             }
             catch (Exception) {

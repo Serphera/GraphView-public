@@ -199,5 +199,59 @@ namespace EditorLibrary {
 
             return points;
         }
+
+
+        /// <summary>
+        /// Rotates Point around origin
+        /// </summary>
+        /// <param name="point"></param>
+        /// <param name="origin"></param>
+        /// <param name="angle"></param>
+        /// <returns></returns>
+        public static Point RotateAroundPoint(Point point, Point origin, double angle) {
+
+            var sin = Math.Sin(angle);
+            var cos = Math.Cos(angle);
+
+            // Sets origin as point to rotate around
+            var delta = new Point(point.X - origin.X, point.Y - origin.Y);
+
+            double newX = delta.X * cos - delta.Y * sin;
+            double newY = delta.X * sin + delta.Y * cos;
+
+            return point = new Point(newX + origin.X, newY + origin.Y);
+        }
+
+
+
+        /// <summary>
+        /// Rotates List<Point> around origin
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="Origin"></param>
+        /// <param name="angle"></param>
+        /// <returns></returns>
+        public static List<Point> RotateAroundPoint(List<Point> list, Point origin, double angle) {
+
+            var sin = Math.Sin(angle);
+            var cos = Math.Cos(angle);
+
+            //Console.WriteLine(angle + " is the offset angle");
+
+            for (int i = 0; i < list.Count; i++) {
+
+                // Sets origin as point to rotate around
+                var delta = new Point(list[i].X - origin.X, list[i].Y - origin.Y);
+
+                double newX = delta.X * cos - delta.Y * sin;
+                double newY = delta.X * sin + delta.Y * cos;
+
+                list[i] = new Point(newX + origin.X, newY + origin.Y);
+            }
+
+            return list;
+        }
+
+
     }
 }

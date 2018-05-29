@@ -90,22 +90,22 @@ namespace GameEditor_GraphView.View {
 
                 case "left":
 
-                    vm.Camera.SetTransform(camera.GetTransform(0, 0) - 10, camera.GetTransform(0, 1));
+                    vm.Camera.SetTransform(camera.GetTransform(0, 0) - 50, camera.GetTransform(0, 1));
                     break;
 
                 case "right":
 
-                    vm.Camera.SetTransform(camera.GetTransform(0, 0) + 10, camera.GetTransform(0, 1));
+                    vm.Camera.SetTransform(camera.GetTransform(0, 0) + 50, camera.GetTransform(0, 1));
                     break;
 
                 case "up":
 
-                    vm.Camera.SetTransform(camera.GetTransform(0, 0), camera.GetTransform(0, 1) + 10);
+                    vm.Camera.SetTransform(camera.GetTransform(0, 0), camera.GetTransform(0, 1) + 50);
                     break;
 
                 case "down":
 
-                    vm.Camera.SetTransform(camera.GetTransform(0, 0), camera.GetTransform(0, 1) - 10);
+                    vm.Camera.SetTransform(camera.GetTransform(0, 0), camera.GetTransform(0, 1) - 50);
                     break;
                 default:
                     break;
