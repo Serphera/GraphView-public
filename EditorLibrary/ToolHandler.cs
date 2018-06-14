@@ -8,7 +8,8 @@ namespace EditorLibrary {
 
     public class ToolHandler {
 
-        protected string name;
+        
         public static int ActiveTool { get; set; }
+        protected string name;
     }
 }

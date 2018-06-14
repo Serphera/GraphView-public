@@ -20,18 +20,9 @@ namespace EditorLibrary {
     public class ToolAdorner : Adorner {
 
         private Point _Location;
-        VisualCollection visualChildren;
-        int _type = 0;
+        private VisualCollection visualChildren;
+        private int _type = 0;
         private ViewModelBase _viewModel;
-
-        public Point offset { get; set; }
-
-        enum Tool {
-
-            Move,
-            Scale,
-            Rotate
-        }
 
 
         public ToolAdorner(UIElement adornedElement, ViewModelBase viewModel, Point position, string name, int type = 0) : base(adornedElement) {
@@ -45,6 +36,16 @@ namespace EditorLibrary {
 
             // TODO: Might be a memory leak
             MouseDown += new System.Windows.Input.MouseButtonEventHandler(curveAdorner_MouseDown);
+        }
+
+
+        public Point offset { get; set; }
+
+        enum Tool {
+
+            Move,
+            Scale,
+            Rotate
         }
 
 

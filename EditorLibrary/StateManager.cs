@@ -19,8 +19,8 @@ namespace EditorLibrary {
 
         protected void Configure(UserControl view, ViewModelBase viewModel) {
 
-            this.View = view;
-            this.ViewModel = viewModel;
+            View = view;
+            ViewModel = viewModel;
         }
     }
 }

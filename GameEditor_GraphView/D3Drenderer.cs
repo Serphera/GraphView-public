@@ -435,102 +435,77 @@ namespace GameEditor_GraphView {
             int index = 0;
             try {
 
-                // TODO: Create method to change start/end coords if the angle is too tight, to avoid dissappearing line
-                var points = ((GameEditor_GraphView.ViewModel.CurveGraphViewModel)manager.ViewModel).ModelItems.Item.Curve.Points;
-                //var points = DrawGraphV2.Draw(((ViewModel.CurveGraphViewModel)manager.ViewModel).ModelItems.Item.Curve.Original)
+                var curveList = ((GameEditor_GraphView.ViewModel.CurveGraphViewModel)manager.ViewModel).ModelItems.Item.Curve;
+
                 vertices = null;
 
                 // Number of points minus 1, times the numbers of points for 2 triangles, 
-                // times vector attributes in shader (3 for location, 1 for color)
-                vertices = new Vector4[(points.Count - 1) * 18];
+                // times vector attributes in shader (3 for location, 1 for color) 
+                vertices = new Vector4[(curveList.Count - 1) * 18];
+
+                for (int j = 0; j < curveList.Count; j++) {
+
+                    // TODO: Add circle with radius of offset to each start/end point
+                    var points = curveList[j].Points;
+                    //var points = DrawGraphV2.Draw(((ViewModel.CurveGraphViewModel)manager.ViewModel).ModelItems.Item.Curve.Original)
+
+                    var color = new Vector4(0.0f, 1.0f, 0.0f, 1.0f);
+
+                    for (int i = 0; i < points.Count - 2; i++) {
+
+                        Vector2 start = new Vector2((float)points[i].X, (float)points[i].Y);
+                        Vector2 end = new Vector2((float)points[i + 1].X, (float)points[i + 1].Y);
+
+                        // Calculate the angle between start and end using polar coordinates
+                        var tan = Math.Atan(((start.Y - end.Y) / (start.X - end.X)));
+
+                        List<System.Windows.Point> sList = new List<System.Windows.Point>();
+                        List<System.Windows.Point> eList = new List<System.Windows.Point>();
+
+                        float offset = 2.5f;
+
+                        sList.Add(new windows.Point(start.X, start.Y - offset));
+                        sList.Add(new windows.Point(start.X, start.Y + offset));
+
+                        eList.Add(new windows.Point(end.X, end.Y + offset));
+                        eList.Add(new windows.Point(end.X, end.Y - offset));
+
+                        sList = LerpMath.RotateAroundPoint(sList, new System.Windows.Point(start.X, start.Y), tan);
+                        eList = LerpMath.RotateAroundPoint(eList, new System.Windows.Point(end.X, end.Y), tan);
 
 
-                var color = new Vector4(0.0f, 1.0f, 0.0f, 1.0f);
+                        // 2 triangles form one quad
+                        // Triangle 1
+                        vertices[index] = new Vector4((float)sList[0].X, (float)sList[0].Y, 1.0f, 1.0f);
+                        vertices[index + 1] = color;
+                        vertices[index + 2] = new Vector4(1.0f, 0.0f, 1.0f, 1.0f);
 
-                for (int i = 0; i < points.Count - 2; i++) {
+                        vertices[index + 3] = new Vector4((float)sList[1].X, (float)sList[1].Y, 1.0f, 1.0f);
+                        vertices[index + 4] = color;
+                        vertices[index + 5] = new Vector4(0.0f, 0.0f, 1.0f, 1.0f);
 
-                    Vector2 start = new Vector2((float)points[i].X, (float)points[i].Y);
-                    Vector2 end = new Vector2((float)points[i + 1].X, (float)points[i + 1].Y);
+                        vertices[index + 6] = new Vector4((float)eList[0].X, (float)eList[0].Y, 1.0f, 1.0f);
+                        vertices[index + 7] = color;
+                        vertices[index + 8] = new Vector4(0.0f, 1.0f, 1.0f, 1.0f);
 
-                    // Calculate the angle between start and end
-                    var tan = Math.Atan(((start.Y - end.Y) / (start.X - end.X)));
+                        //Triangle 2
+                        vertices[index + 9] = vertices[index + 6];
+                        vertices[index + 10] = color;
+                        vertices[index + 11] = vertices[index + 8];
 
-                    List<System.Windows.Point> sList = new List<System.Windows.Point>();
-                    List<System.Windows.Point> eList = new List<System.Windows.Point>();
+                        vertices[index + 15] = vertices[index];
+                        vertices[index + 16] = color;
+                        vertices[index + 17] = vertices[index + 2];
 
-                    float offset = 2.5f;
+                        vertices[index + 12] = new Vector4((float)eList[1].X, (float)eList[1].Y, 1.0f, 1.0f);
+                        vertices[index + 13] = color;
+                        vertices[index + 14] = new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 
-                    sList.Add(new windows.Point(start.X, start.Y - offset));
-                    sList.Add(new windows.Point(start.X, start.Y + offset));
+                        index += 18;
 
-                    eList.Add(new windows.Point(end.X, end.Y + offset));
-                    eList.Add(new windows.Point(end.X, end.Y - offset));
-
-                    sList = LerpMath.RotateAroundPoint(sList, new System.Windows.Point(start.X, start.Y), tan);
-                    eList = LerpMath.RotateAroundPoint(eList, new System.Windows.Point(end.X, end.Y), tan);
-
-
-
-                    // 2 triangles form one quad
-                    // Triangle 1
-                    vertices[index] = new Vector4((float)sList[0].X, (float)sList[0].Y, 1.0f, 1.0f);
-                    vertices[index + 1] = color;
-                    vertices[index + 2] = new Vector4(1.0f, 0.0f, 1.0f, 1.0f);
-
-                    vertices[index + 3] = new Vector4((float)sList[1].X, (float)sList[1].Y, 1.0f, 1.0f);
-                    vertices[index + 4] = color;
-                    vertices[index + 5] = new Vector4(0.0f, 0.0f, 1.0f, 1.0f);
-
-                    vertices[index + 6] = new Vector4((float)eList[0].X, (float)eList[0].Y, 1.0f, 1.0f);
-                    vertices[index + 7] = color;
-                    vertices[index + 8] = new Vector4(0.0f, 1.0f, 1.0f, 1.0f);
-
-                    //Triangle 2
-                    vertices[index + 9] = vertices[index + 6];
-                    vertices[index + 10] = color;
-                    vertices[index + 11] = vertices[index + 8];
-
-                    vertices[index + 15] = vertices[index];
-                    vertices[index + 16] = color;
-                    vertices[index + 17] = vertices[index + 2];
-
-                    vertices[index + 12] = new Vector4((float)eList[1].X, (float)eList[1].Y, 1.0f, 1.0f);
-                    vertices[index + 13] = color;
-                    vertices[index + 14] = new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-
-                    index += 18;
-
-                    /*
-                    // 2 triangles form one quad
-                    // Triangle 1
-                    vertices[index] = new Vector4(start.X, start.Y - 2.5f, 1.0f, 1.0f);
-                    vertices[index + 1] = color;
-                    vertices[index + 2] = new Vector4(1.0f, 0.0f, 1.0f, 1.0f);
-
-                    vertices[index + 3] = new Vector4(start.X, start.Y + 2.5f, 1.0f, 1.0f);
-                    vertices[index + 4] = color;
-                    vertices[index + 5] = new Vector4(0.0f, 0.0f, 1.0f, 1.0f);
-
-                    vertices[index + 6] = new Vector4(end.X, end.Y + 2.5f, 1.0f, 1.0f);
-                    vertices[index + 7] = color;
-                    vertices[index + 8] = new Vector4(0.0f, 1.0f, 1.0f, 1.0f);
-
-                    //Triangle 2
-                    vertices[index + 9] = vertices[index + 6];
-                    vertices[index + 10] = color;
-                    vertices[index + 11] = vertices[index + 8];
-
-                    vertices[index + 15] = vertices[index];
-                    vertices[index + 16] = color;
-                    vertices[index + 17] = vertices[index + 2];
-
-                    vertices[index + 12] = new Vector4(end.X, end.Y - 2.5f, 1.0f, 1.0f);
-                    vertices[index + 13] = color;
-                    vertices[index + 14] = new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-
-                    index += 18;
-                    */
+                    }
                 }
+
             }
             catch (Exception) {
 
@@ -719,19 +694,27 @@ namespace GameEditor_GraphView {
 
             List<windows.Point> list = new List<windows.Point>();
 
-            var points = ((GameEditor_GraphView.ViewModel.CurveGraphViewModel)manager.ViewModel).ModelItems.Item.Curve.Points;
-            var camera = ((ViewModel.CurveGraphViewModel)manager.ViewModel).Camera;
+            var curveList = ((GameEditor_GraphView.ViewModel.CurveGraphViewModel)manager.ViewModel).ModelItems.Item;
 
-            for (int i = 0; i < points.Count; i++) {
+            for (int j = 0; j < curveList.GetCount; j++) {
 
-                // Converts point in D3D space to screen space
-                //var vector = new Vector3((float)(points[i].X - camera.GetTransform(0, 0)), (float)(points[i].Y - camera.GetTransform(0, 1)), 1);
-                var vector = new Vector3((float)points[i].X, (float)points[i].Y, 1);
+                var points = curveList.Curve[j].Points;
 
-                var space = Vector3.Project(vector, 0, 1, viewPort.Width, viewPort.Height, 0.0f, 100.0f, worldViewProj);
+                var camera = ((ViewModel.CurveGraphViewModel)manager.ViewModel).Camera;
 
-                list.Add(new windows.Point(space.X, space.Y ));
+                for (int i = 0; i < points.Count; i++) {
+
+                    // Converts point in D3D space to screen space
+                    //var vector = new Vector3((float)(points[i].X - camera.GetTransform(0, 0)), (float)(points[i].Y - camera.GetTransform(0, 1)), 1);
+                    var vector = new Vector3((float)points[i].X, (float)points[i].Y, 1);
+
+                    var space = Vector3.Project(vector, 0, 1, viewPort.Width, viewPort.Height, 0.0f, 100.0f, worldViewProj);
+
+                    list.Add(new windows.Point(space.X, space.Y));
+                }
             }
+            
+
 
             return list; 
         }

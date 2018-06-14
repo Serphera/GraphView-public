@@ -23,53 +23,58 @@ namespace GameEditor_GraphView {
         /// <returns></returns>
         public static List<FrameworkElement> DrawRectangles(CurveGraphViewModel vm, List<Point> list) {
 
-            var _Curve = vm.ModelItems.Item.Curve;
+            var curveList = vm.ModelItems.Item;
             List<FrameworkElement> elementList = new List<FrameworkElement>();
             int originalPos = 0;
             int smoothPos = 0;
 
+            for (int j = 0; j < curveList.GetCount; j++) {
 
-            //Draws point rectangles
-            for (int i = 0; i < _Curve.Points.Count - 1; i++) {
+                var curve = curveList.Curve[j];
+                //Draws point rectangles
+                for (int i = 0; i < curveList.Curve[j].Points.Count - 1; i++) {
 
-                Rectangle rect = new Rectangle();
+                    Rectangle rect = new Rectangle();
 
-                rect.Height = 5;
-                rect.Width = 5;
-                rect.Fill = Brushes.DarkBlue;
+                    rect.Height = 5;
+                    rect.Width = 5;
+                    rect.Fill = Brushes.DarkBlue;
 
-                if (i == originalPos && smoothPos < _Curve.Smoothness.Count || i == _Curve.Points.Count - 1) {
+                    if (i == originalPos && smoothPos < curve.Smoothness.Count || i == curve.Points.Count - 1) {
 
-                    //_Curve.Original[smoothPos] = _Curve.Points[i];
+                        //_Curve.Original[smoothPos] = _Curve.Points[i];
 
-                    if (smoothPos < _Curve.Smoothness.Count) {
+                        if (smoothPos < curve.Smoothness.Count) {
 
-                        originalPos += _Curve.Smoothness[smoothPos] + 1;
+                            originalPos += curve.Smoothness[smoothPos] + 1;
+                        }
+
+
+                        smoothPos++;
+                        rect.Fill = Brushes.Yellow;
                     }
 
+                    string name = String.Format("point{0}", i);
+                    rect.Tag = name;
 
-                    smoothPos++;
-                    rect.Fill = Brushes.Yellow;
-                }
+                    elementList.Add(rect);
 
-                string name = String.Format("point{0}", i);
-                rect.Tag = name;
+                    try {
 
-                elementList.Add(rect);
+                        var pos = vm.Camera.OffsetPosition(new Point(list[i].X + vm.Camera.GetTransform(0, 0) - 2.5f, list[i].Y + vm.Camera.GetTransform(0, 1) - 2.5f));
+                        var camera = vm.Camera;
 
-                try {
+                        Canvas.SetTop(rect, pos.Y);
+                        Canvas.SetLeft(rect, pos.X);
+                    }
+                    catch (IndexOutOfRangeException) {
 
-                    var pos = vm.Camera.OffsetPosition(new Point(list[i].X + vm.Camera.GetTransform(0, 0) - 2.5f, list[i].Y + vm.Camera.GetTransform(0, 1) - 2.5f));
-                    var camera = vm.Camera;
-
-                    Canvas.SetTop(rect, pos.Y);
-                    Canvas.SetLeft(rect, pos.X);
-                }
-                catch (IndexOutOfRangeException) {
-
-                    throw;
+                        throw;
+                    }
                 }
             }
+
+
 
             return elementList;
         }

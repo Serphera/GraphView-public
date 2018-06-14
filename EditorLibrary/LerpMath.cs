@@ -236,8 +236,6 @@ namespace EditorLibrary {
             var sin = Math.Sin(angle);
             var cos = Math.Cos(angle);
 
-            //Console.WriteLine(angle + " is the offset angle");
-
             for (int i = 0; i < list.Count; i++) {
 
                 // Sets origin as point to rotate around

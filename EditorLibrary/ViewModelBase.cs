@@ -29,18 +29,18 @@ namespace EditorLibrary {
             }
         }
 
-        public abstract void OnMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e);
 
+        public abstract void OnMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e);
 
 
         protected virtual void OnCollectionChanged(object sender, CollectionChangeEventArgs e) {
 
-            this.CollectionChanged?.Invoke(this, e);
+            CollectionChanged?.Invoke(this, e);
         }
 
         protected virtual void OnPropertyChanged(string propertyName) {
 
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

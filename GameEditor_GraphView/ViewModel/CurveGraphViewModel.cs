@@ -467,11 +467,12 @@ namespace GameEditor_GraphView.ViewModel {
                         Point pos = camera.OffsetPosition(e.GetPosition(_Canvas));
 
                         CurveGraphModel model = ModelItems;
-                        BezierCurve curve = model.Item.Curve;
+                        // TODO: Need to find ways to separate curves from each other
+                        //BezierCurve curve = model.Item.Curve;
 
-                        curve.InsertPoint(pos);
+                        //curve.InsertPoint(pos);
 
-                        Add(model);
+                        //Add(model);
                     }
                     break;
 
@@ -569,7 +570,7 @@ namespace GameEditor_GraphView.ViewModel {
 
                             Point avgPosition = LerpMath.CalculateAverage(selectedPos);
                             Point offset = LerpMath.CalculateDelta(
-                                modelitems.Item.Curve.Points[selectedItems[0]],
+                                modelitems.Item.Curve[0].Points[selectedItems[0]],
                                 avgPosition,
                                 true
                                 );
@@ -605,45 +606,50 @@ namespace GameEditor_GraphView.ViewModel {
                     if (!_shift) { ClearItems(); }
 
                     _shift = false;
-                    List<Point> list = modelitems.Item.Curve.Original;
 
-                    double minX = (dragOrigin[0] < dragEnd[0]) ? dragOrigin[0] : dragEnd[0];
-                    double minY = (dragOrigin[1] < dragEnd[1]) ? dragOrigin[1] : dragEnd[1];
+                    for (int j = 0; j < modelitems.Item.Curve.Count; j++) {
 
-                    double maxX = (dragOrigin[0] > dragEnd[0]) ? dragOrigin[0] : dragEnd[0];
-                    double maxY = (dragOrigin[1] > dragEnd[1]) ? dragOrigin[1] : dragEnd[1];
+                        var list = modelitems.Item.Curve[j].Original;
+
+                        double minX = (dragOrigin[0] < dragEnd[0]) ? dragOrigin[0] : dragEnd[0];
+                        double minY = (dragOrigin[1] < dragEnd[1]) ? dragOrigin[1] : dragEnd[1];
+
+                        double maxX = (dragOrigin[0] > dragEnd[0]) ? dragOrigin[0] : dragEnd[0];
+                        double maxY = (dragOrigin[1] > dragEnd[1]) ? dragOrigin[1] : dragEnd[1];
 
 
-                    for (int i = 0; i < _Canvas.Children.Count; i++) {
+                        for (int i = 0; i < _Canvas.Children.Count; i++) {
 
-                        if (_Canvas.Children[i] is Rectangle) {
+                            if (_Canvas.Children[i] is Rectangle) {
 
-                            Rectangle rect = (Rectangle)_Canvas.Children[i];
+                                Rectangle rect = (Rectangle)_Canvas.Children[i];
 
-                            if ((minX - 3) < Canvas.GetLeft(rect) && (maxX + 3) > Canvas.GetLeft(rect)) {
+                                if ((minX - 3) < Canvas.GetLeft(rect) && (maxX + 3) > Canvas.GetLeft(rect)) {
 
-                                if ((minY - 3) < Canvas.GetTop(rect) && (maxY + 3) > Canvas.GetTop(rect)) {
+                                    if ((minY - 3) < Canvas.GetTop(rect) && (maxY + 3) > Canvas.GetTop(rect)) {
 
-                                    int pointNr = Convert.ToInt32(Regex.Match(rect.Tag.ToString(), "[0-9]{1,3}$").ToString());
-                                    bool exists = false;
+                                        int pointNr = Convert.ToInt32(Regex.Match(rect.Tag.ToString(), "[0-9]{1,3}$").ToString());
+                                        bool exists = false;
 
-                                    if (selectedItems.IndexOf(pointNr) != -1) { exists = true; }
+                                        if (selectedItems.IndexOf(pointNr) != -1) { exists = true; }
 
-                                    if (!exists) {
+                                        if (!exists) {
 
-                                        selectedPos.Add(camera.OffsetPosition(new Point(Canvas.GetLeft(rect), Canvas.GetTop(rect))));
-                                        selectedItems.Add(pointNr);
+                                            selectedPos.Add(camera.OffsetPosition(new Point(Canvas.GetLeft(rect), Canvas.GetTop(rect))));
+                                            selectedItems.Add(pointNr);
 
-                                        dragOrigin[0] = Canvas.GetLeft(rect);
-                                        dragOrigin[1] = Canvas.GetTop(rect);
+                                            dragOrigin[0] = Canvas.GetLeft(rect);
+                                            dragOrigin[1] = Canvas.GetTop(rect);
 
-                                        var myAdornerLayer = AdornerLayer.GetAdornerLayer(rect);
-                                        RenderSelection(rect, myAdornerLayer);
+                                            var myAdornerLayer = AdornerLayer.GetAdornerLayer(rect);
+                                            RenderSelection(rect, myAdornerLayer);
+                                        }
                                     }
                                 }
                             }
                         }
                     }
+
                 }
             }
             //Remove selection
