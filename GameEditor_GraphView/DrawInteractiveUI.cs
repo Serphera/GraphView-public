@@ -21,18 +21,18 @@ namespace GameEditor_GraphView {
         /// </summary>
         /// <param name="vm"></param>
         /// <returns></returns>
-        public static List<FrameworkElement> DrawRectangles(CurveGraphViewModel vm, List<Point> list) {
+        public static List<FrameworkElement> DrawRectangles(CurveGraphViewModel vm, List<Point> list, int curveNr) {
 
-            var curveList = vm.ModelItems.Item;
+            var curveList = vm.ModelItems.Item.Curve;
             List<FrameworkElement> elementList = new List<FrameworkElement>();
             int originalPos = 0;
             int smoothPos = 0;
 
-            for (int j = 0; j < curveList.GetCount; j++) {
+            for (int j = 0; j < curveList.Count; j++) {
 
-                var curve = curveList.Curve[j];
+                var curve = curveList[j];
                 //Draws point rectangles
-                for (int i = 0; i < curveList.Curve[j].Points.Count - 1; i++) {
+                for (int i = 0; i < curveList[j].Points.Count - 1; i++) {
 
                     Rectangle rect = new Rectangle();
 
@@ -54,7 +54,7 @@ namespace GameEditor_GraphView {
                         rect.Fill = Brushes.Yellow;
                     }
 
-                    string name = String.Format("point{0}", i);
+                    string name = String.Format("curve{1} point{0}", i, curveNr);
                     rect.Tag = name;
 
                     elementList.Add(rect);

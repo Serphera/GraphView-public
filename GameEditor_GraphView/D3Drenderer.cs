@@ -441,9 +441,9 @@ namespace GameEditor_GraphView {
 
                 // Number of points minus 1, times the numbers of points for 2 triangles, 
                 // times vector attributes in shader (3 for location, 1 for color) 
-                vertices = new Vector4[(curveList.Count - 1) * 18];
+                vertices = new Vector4[(curveList.Count) * 18];
 
-                for (int j = 0; j < curveList.Count; j++) {
+                for (int j = 0; j < curveList.Count - 1; j++) {
 
                     // TODO: Add circle with radius of offset to each start/end point
                     var points = curveList[j].Points;
@@ -694,11 +694,11 @@ namespace GameEditor_GraphView {
 
             List<windows.Point> list = new List<windows.Point>();
 
-            var curveList = ((GameEditor_GraphView.ViewModel.CurveGraphViewModel)manager.ViewModel).ModelItems.Item;
+            var curveList = ((GameEditor_GraphView.ViewModel.CurveGraphViewModel)manager.ViewModel).ModelItems.Item.Curve;
 
-            for (int j = 0; j < curveList.GetCount; j++) {
+            for (int j = 0; j < curveList.Count; j++) {
 
-                var points = curveList.Curve[j].Points;
+                var points = curveList[j].Points;
 
                 var camera = ((ViewModel.CurveGraphViewModel)manager.ViewModel).Camera;
 

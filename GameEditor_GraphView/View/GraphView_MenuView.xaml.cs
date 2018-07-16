@@ -49,16 +49,20 @@ namespace GameEditor_GraphView.View {
             pos.Y -= vm.Camera.GetTransform(0, 1);
 
             double value = 0;
+            for (int x = 0; x < vm.ModelItems.Item.Curve.Count; x++) {
 
-            for (int i = 0; i < vm.ModelItems.Item.Curve.Points.Count; i++) {
+                var curve = vm.ModelItems.Item.Curve[x].Points;
 
-                if (i != 0 && pos.X < vm.ModelItems.Item.Curve.Points[i].X) {
+                for (int i = 0; i < curve.Count; i++) {
 
-                    Point point1 = vm.ModelItems.Item.Curve.Points[i - 1];
-                    Point point2 = vm.ModelItems.Item.Curve.Points[i];
+                    if (i != 0 && pos.X < curve[i].X) {
 
-                    value = LerpMath.Lerp(point1, point2, pos.X / point2.X).Y;
-                    break;
+                        Point point1 = curve[i - 1];
+                        Point point2 = curve[i];
+
+                        value = LerpMath.Lerp(point1, point2, pos.X / point2.X).Y;
+                        break;
+                    }
                 }
             }
 

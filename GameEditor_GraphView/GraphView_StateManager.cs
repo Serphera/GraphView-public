@@ -210,8 +210,9 @@ namespace GameEditor_GraphView {
 
         public void UpdateGraphView(Bitmap image, List<System.Windows.Point> pList) {
 
+            
             SetContext();
-            var view = ((GraphView_MainView)this.View).GraphView;
+            var view = ((GraphView_MainView)View).GraphView;
             var final = new System.Windows.Controls.Image();
             final.Source = BitmapToImageSource(image);
 
@@ -221,7 +222,12 @@ namespace GameEditor_GraphView {
             final.Effect = blur;
             var list = new List<FrameworkElement>();
             list.Add(final);
-            list.AddRange(DrawInteractiveUI.DrawRectangles((CurveGraphViewModel)ViewModel, pList));
+
+            // TODO: Change to accept multiple curves
+            for (int i = 0; i < ; i++) {
+
+            }
+            list.AddRange(DrawInteractiveUI.DrawRectangles((CurveGraphViewModel)ViewModel, pList, 0));
 
             ((GameEditor_GraphView.ViewModel.CurveGraphViewModel)ViewModel).Add(list);
 

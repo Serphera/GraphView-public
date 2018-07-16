@@ -64,12 +64,12 @@ namespace GameEditor_GraphView.ViewModel {
         private List<Adorner> adornerArray = new List<Adorner>();
         private List<Point> movementQueue;
         private List<Point> selectedPos = new List<Point>();
-        private ObservableCollection<int> selectedItems = new ObservableCollection<int>();
+        private ObservableCollection<Tuple<int, int>> selectedItems = new ObservableCollection<Tuple<int, int>>();
 
 
         public CurveGraphModel ModelItems { get { return modelitems; } set { modelitems = value; } }
 
-        public Camera Camera { get { return this.camera; } set { this.camera = value; } }
+        public Camera Camera { get { return camera; } set { camera = value; } }
 
 
         public ObservableCollection<FrameworkElement> Items {
@@ -118,7 +118,7 @@ namespace GameEditor_GraphView.ViewModel {
 
         public void Add(Shape shape) {
 
-            this.items.Add(shape);
+            items.Add(shape);
         }
 
 
@@ -293,17 +293,20 @@ namespace GameEditor_GraphView.ViewModel {
 
                     double[] original = new double[2];
 
-                    original[0] = model.Item.Curve.Points[selectedItems[i]].X;
-                    original[1] = model.Item.Curve.Points[selectedItems[i]].Y;
-                    
+                    var curveNr = Convert.ToInt32(selectedItems[i].Item1);
+                    var pointNr = Convert.ToInt32(selectedItems[i].Item2);
+
+                    original[0] = model.Item.Curve[curveNr].Points[pointNr].X;
+                    original[1] = model.Item.Curve[curveNr].Points[pointNr].Y;
+
                     CheckDirection(original, ref dest);
 
                     Point dest2 = new Point(original[0] + dest.X, original[1] + dest.Y);
                     modifiedList.Add(dest2);
                     selectedPos[i] = dest2;
-                    
-                    model.Item.Curve.Points[selectedItems[i]] = dest2;                   
-                }                
+
+                    model.Item.Curve[curveNr].Points[pointNr] = dest2;  
+                }
             }
             movementQueue.Clear();
         }
@@ -550,6 +553,7 @@ namespace GameEditor_GraphView.ViewModel {
 
         }
 
+
         private void HandleSelection(object sender, MouseButtonEventArgs e) {
 
             //If rectangle hit
@@ -569,8 +573,9 @@ namespace GameEditor_GraphView.ViewModel {
                         if (selectedPos.Count > 1) {
 
                             Point avgPosition = LerpMath.CalculateAverage(selectedPos);
+
                             Point offset = LerpMath.CalculateDelta(
-                                modelitems.Item.Curve[0].Points[selectedItems[0]],
+                                modelitems.Item.Curve[selectedItems[0].Item1].Points[selectedItems[0].Item2],
                                 avgPosition,
                                 true
                                 );
@@ -580,11 +585,14 @@ namespace GameEditor_GraphView.ViewModel {
                             RenderSelection(rect, myAdornerLayer);
                         }
 
-                        StringBuilder tag = new StringBuilder();
-                        tag.Append(rect.Tag.ToString());
-                        tag.Remove(0, 5);
+                        StringBuilder curveTag = new StringBuilder();
+                        //curveTag.Append(rect.Tag.ToString());
+                        //curveTag.Remove(0, 5);
 
-                        int pointNr = Convert.ToInt32(Regex.Match(tag.ToString(), "[0-9]{1,3}$").ToString());
+
+                        var matches = Regex.Matches(rect.Tag.ToString(), "[0-9]{1,3}");
+
+                        //int pointNr = Convert.ToInt32(Regex.Matches(curveTag.ToString(), "[0-9]{1,6}").ToString());
 
                         if (!Keyboard.IsKeyDown(Key.LeftShift) && !Keyboard.IsKeyDown(Key.RightShift)) {
 
@@ -592,11 +600,14 @@ namespace GameEditor_GraphView.ViewModel {
                             selectedPos.Add(camera.OffsetPosition(new Point(Canvas.GetLeft(rect), Canvas.GetTop(rect))));
                         }
 
-                        selectedItems.Add(pointNr);
+                        selectedItems.Add(new Tuple<int, int>(Convert.ToInt32(matches[0].ToString()), Convert.ToInt32(matches[1].ToString())));
+
+                        //selectedItems.Add(pointNr);
                     }
                 }
                 _shift = false;
             }
+
             //Drag selection
             else if (_dragDropped && (3 * camera.GetScale) < LerpMath.CalculateDelta(dragOrigin[0], dragEnd[0]) 
                 || (3 * camera.GetScale) < LerpMath.CalculateDelta(dragOrigin[1], dragEnd[1])) {
@@ -628,15 +639,17 @@ namespace GameEditor_GraphView.ViewModel {
 
                                     if ((minY - 3) < Canvas.GetTop(rect) && (maxY + 3) > Canvas.GetTop(rect)) {
 
-                                        int pointNr = Convert.ToInt32(Regex.Match(rect.Tag.ToString(), "[0-9]{1,3}$").ToString());
+                                        //int pointNr = Convert.ToInt32(Regex.Match(rect.Tag.ToString(), "[0-9]{1,3}$").ToString());
+                                        var matches = Regex.Matches(rect.Tag.ToString(), "[0-9]{1,3}");
+                                        Tuple<int, int> curvePointNr = new Tuple<int, int>(Convert.ToInt32(matches[0].ToString()), Convert.ToInt32(matches[1].ToString()));
                                         bool exists = false;
 
-                                        if (selectedItems.IndexOf(pointNr) != -1) { exists = true; }
+                                        if (selectedItems.IndexOf(curvePointNr) != -1) { exists = true; }
 
                                         if (!exists) {
 
                                             selectedPos.Add(camera.OffsetPosition(new Point(Canvas.GetLeft(rect), Canvas.GetTop(rect))));
-                                            selectedItems.Add(pointNr);
+                                            selectedItems.Add(curvePointNr);
 
                                             dragOrigin[0] = Canvas.GetLeft(rect);
                                             dragOrigin[1] = Canvas.GetTop(rect);
