@@ -50,8 +50,9 @@ namespace GameEditor_GraphView.Model
         
         public void Replace(BezierCurve item, int index) {
 
-            //Curve = item;
-            throw new NotImplementedException();
+            _totalCount -= _curve[index].Points.Count;
+            _curve[index] = item;
+            _totalCount += _curve[index].Points.Count;
         }
     }
 }

@@ -585,14 +585,7 @@ namespace GameEditor_GraphView.ViewModel {
                             RenderSelection(rect, myAdornerLayer);
                         }
 
-                        StringBuilder curveTag = new StringBuilder();
-                        //curveTag.Append(rect.Tag.ToString());
-                        //curveTag.Remove(0, 5);
-
-
                         var matches = Regex.Matches(rect.Tag.ToString(), "[0-9]{1,3}");
-
-                        //int pointNr = Convert.ToInt32(Regex.Matches(curveTag.ToString(), "[0-9]{1,6}").ToString());
 
                         if (!Keyboard.IsKeyDown(Key.LeftShift) && !Keyboard.IsKeyDown(Key.RightShift)) {
 
@@ -601,10 +594,9 @@ namespace GameEditor_GraphView.ViewModel {
                         }
 
                         selectedItems.Add(new Tuple<int, int>(Convert.ToInt32(matches[0].ToString()), Convert.ToInt32(matches[1].ToString())));
-
-                        //selectedItems.Add(pointNr);
                     }
                 }
+
                 _shift = false;
             }
 
@@ -639,7 +631,6 @@ namespace GameEditor_GraphView.ViewModel {
 
                                     if ((minY - 3) < Canvas.GetTop(rect) && (maxY + 3) > Canvas.GetTop(rect)) {
 
-                                        //int pointNr = Convert.ToInt32(Regex.Match(rect.Tag.ToString(), "[0-9]{1,3}$").ToString());
                                         var matches = Regex.Matches(rect.Tag.ToString(), "[0-9]{1,3}");
                                         Tuple<int, int> curvePointNr = new Tuple<int, int>(Convert.ToInt32(matches[0].ToString()), Convert.ToInt32(matches[1].ToString()));
                                         bool exists = false;

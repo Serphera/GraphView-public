@@ -166,7 +166,7 @@ namespace GameEditor_GraphView {
             //PixelFormat format = PixelFormat.Format32bppPArgb;
             using (MemoryStream memory = new MemoryStream()) {
 
-                bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Tiff);
+                bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Png);
                 memory.Position = 0;
                 
                 bitmapimage.BeginInit();
@@ -180,7 +180,7 @@ namespace GameEditor_GraphView {
 
 
         //public void SetupView(SharpDX.Direct2D1.Bitmap.PixelSize bitmap, byte[] data, List<System.Windows.Point> list) {
-        public void SetupView(int height, int width, float dpiHeight, float dpiWidth, byte[] data, List<System.Windows.Point> list) {
+        public void SetupView(int height, int width, float dpiHeight, float dpiWidth, byte[] data, List<List<System.Windows.Point>> list) {
 
             if (data == null) { return; }
 
@@ -198,17 +198,16 @@ namespace GameEditor_GraphView {
 
             var image = GetBitmap(source);
             data = null;
-
+            source = null;
+            
             System.Windows.Media.Effects.BlurEffect blur = new System.Windows.Media.Effects.BlurEffect();
-            blur.Radius = 0.5f;
+            blur.Radius = 0.5f;           
             
-            
-
             App.Current.Dispatcher.Invoke(() => UpdateGraphView(image, list));
         }
 
 
-        public void UpdateGraphView(Bitmap image, List<System.Windows.Point> pList) {
+        public void UpdateGraphView(Bitmap image, List<List<System.Windows.Point>> pList) {
 
             
             SetContext();
@@ -223,11 +222,11 @@ namespace GameEditor_GraphView {
             var list = new List<FrameworkElement>();
             list.Add(final);
 
-            // TODO: Change to accept multiple curves
-            for (int i = 0; i < ; i++) {
+            for (int i = 0; i < pList.Count; i++) {
 
+                list.AddRange(DrawInteractiveUI.DrawRectangles((CurveGraphViewModel)ViewModel, pList[i], i));
             }
-            list.AddRange(DrawInteractiveUI.DrawRectangles((CurveGraphViewModel)ViewModel, pList, 0));
+            
 
             ((GameEditor_GraphView.ViewModel.CurveGraphViewModel)ViewModel).Add(list);
 
@@ -262,6 +261,7 @@ namespace GameEditor_GraphView {
         public void CreateGraphView() {
 
             List<System.Windows.Point> pList = new List<System.Windows.Point>();
+            List<System.Windows.Point> pList2 = new List<System.Windows.Point>();
 
             GraphView_MainView _GraphView = new GraphView_MainView();
             CurveGraphViewModel _GraphViewModel = new CurveGraphViewModel();
@@ -272,14 +272,23 @@ namespace GameEditor_GraphView {
             pList.Add(new System.Windows.Point(700, 400));
             pList.Add(new System.Windows.Point(900, 350));
 
+            pList2.Add(new System.Windows.Point(0, 100));
+            pList2.Add(new System.Windows.Point(250, 500));
+            pList2.Add(new System.Windows.Point(500, 300));
+            pList2.Add(new System.Windows.Point(700, 500));
+            pList2.Add(new System.Windows.Point(900, 450));
+
             // TODO: Replace Camera with Camera once integrated with GameEditor
             _GraphViewModel.Camera = new Camera();
             _GraphViewModel.Camera.SetTransform(0, 0);
 
             BezierCurveModelItem item = new BezierCurveModelItem(new BezierCurve(pList));
 
+            item.Add(new BezierCurve(pList2));
+
             CurveGraphModel model = new CurveGraphModel();
             model.Item = item;
+           
 
             _GraphViewModel.Add(model);
 

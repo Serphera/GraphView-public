@@ -44,7 +44,7 @@ namespace GameEditor_GraphView {
             ProjectStateManager.StateManagers.Add(graphView_StateManager);
 
             GraphViewMainGrid.Children.Add(graphView_StateManager.View);
-            this.Closing += graphView_StateManager.Dispose;
+            Closing += graphView_StateManager.Dispose;
         }
 
     }

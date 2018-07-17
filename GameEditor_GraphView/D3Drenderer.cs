@@ -435,19 +435,19 @@ namespace GameEditor_GraphView {
             int index = 0;
             try {
 
-                var curveList = ((GameEditor_GraphView.ViewModel.CurveGraphViewModel)manager.ViewModel).ModelItems.Item.Curve;
+                var item = ((GameEditor_GraphView.ViewModel.CurveGraphViewModel)manager.ViewModel).ModelItems.Item;
+                var curveList = item.Curve;
 
                 vertices = null;
 
                 // Number of points minus 1, times the numbers of points for 2 triangles, 
                 // times vector attributes in shader (3 for location, 1 for color) 
-                vertices = new Vector4[(curveList.Count) * 18];
+                vertices = new Vector4[(item.GetCount) * 18];
 
                 for (int j = 0; j < curveList.Count - 1; j++) {
 
                     // TODO: Add circle with radius of offset to each start/end point
                     var points = curveList[j].Points;
-                    //var points = DrawGraphV2.Draw(((ViewModel.CurveGraphViewModel)manager.ViewModel).ModelItems.Item.Curve.Original)
 
                     var color = new Vector4(0.0f, 1.0f, 0.0f, 1.0f);
 
@@ -656,7 +656,7 @@ namespace GameEditor_GraphView {
         /// <param name="data"></param>
         /// <param name="screenPoints"></param>
         /// <param name="manager"></param>
-        private void DisplayBitmap(D2D1.BitmapRenderTarget bitmapTarget, byte[] data, List<windows.Point> screenPoints, GraphView_StateManager manager) {
+        private void DisplayBitmap(D2D1.BitmapRenderTarget bitmapTarget, byte[] data, List<List<windows.Point>> screenPoints, GraphView_StateManager manager) {
 
             if (bitmapTarget != null && data != null) {
 
@@ -690,17 +690,17 @@ namespace GameEditor_GraphView {
         /// <param name="viewPort"></param>
         /// <param name="worldViewProj"></param>
         /// <returns></returns>
-        private List<windows.Point> PointToScreenSpace(GraphView_StateManager manager, Viewport viewPort, Matrix worldViewProj) {
-
-            List<windows.Point> list = new List<windows.Point>();
+        private List<List<windows.Point>> PointToScreenSpace(GraphView_StateManager manager, Viewport viewPort, Matrix worldViewProj) {
+            
+            List<List<windows.Point>> finalList = new List<List<windows.Point>>();
 
             var curveList = ((GameEditor_GraphView.ViewModel.CurveGraphViewModel)manager.ViewModel).ModelItems.Item.Curve;
+            var camera = ((ViewModel.CurveGraphViewModel)manager.ViewModel).Camera;
 
             for (int j = 0; j < curveList.Count; j++) {
 
-                var points = curveList[j].Points;
-
-                var camera = ((ViewModel.CurveGraphViewModel)manager.ViewModel).Camera;
+                var list = new List<windows.Point>();
+                var points = curveList[j].Points;                
 
                 for (int i = 0; i < points.Count; i++) {
 
@@ -712,11 +712,11 @@ namespace GameEditor_GraphView {
 
                     list.Add(new windows.Point(space.X, space.Y));
                 }
-            }
+
+                finalList.Add(list);
+            }            
             
-
-
-            return list; 
+            return finalList;
         }
         
 
