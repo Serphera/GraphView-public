@@ -444,12 +444,12 @@ namespace GameEditor_GraphView {
                 // times vector attributes in shader (3 for location, 1 for color) 
                 vertices = new Vector4[(item.GetCount) * 18];
 
-                for (int j = 0; j < curveList.Count - 1; j++) {
+                // RGBA
+                var color = new Vector4(0.0f, 1.0f, 0.0f, 1.0f);
 
-                    // TODO: Add circle with radius of offset to each start/end point
-                    var points = curveList[j].Points;
+                for (int j = 0; j < curveList.Count; j++) {
 
-                    var color = new Vector4(0.0f, 1.0f, 0.0f, 1.0f);
+                    var points = curveList[j].Points;                    
 
                     for (int i = 0; i < points.Count - 2; i++) {
 
@@ -502,7 +502,6 @@ namespace GameEditor_GraphView {
                         vertices[index + 14] = new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 
                         index += 18;
-
                     }
                 }
 
