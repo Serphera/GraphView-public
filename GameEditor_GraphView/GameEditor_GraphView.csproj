@@ -92,6 +92,7 @@
     <Compile Include="GraphView_StateManager.cs" />
     <Compile Include="GraphView_ToolHandler.cs" />
     <Compile Include="GraphGrid.cs" />
+    <Compile Include="GrahpGridV2.cs" />
     <Compile Include="Model\BezierCurveModelItem.cs" />
     <Compile Include="Model\CurveGraphModel.cs" />
     <Compile Include="SelectedItemAdorner.cs" />

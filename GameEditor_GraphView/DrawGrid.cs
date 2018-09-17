@@ -12,6 +12,7 @@ using GameEditor_GraphView.Model;
 
 
 namespace GameEditor_GraphView {
+
     static class DrawGrid {
 
 
@@ -22,6 +23,15 @@ namespace GameEditor_GraphView {
             return grid;
         }
 
+
+        public static List<Point> Draw(Camera cam) {
+
+            List<Point> list = new List<Point>();
+
+
+
+            return list;
+        }
 
         public static GraphGrid Draw(CurveGraphModel model, Camera cam) {
 

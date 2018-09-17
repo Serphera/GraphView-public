@@ -211,9 +211,6 @@ namespace GameEditor_GraphView {
 
                 if (IsViewModelChanged || !MessageQueue.IsEmpty || true) {
 
-                    Thread vertexThread = new Thread(() => CalculateQuads(manager));
-                    vertexThread.Start();
-
                     CreateSwapChain();
 
                     IsViewModelChanged = false;
@@ -238,8 +235,10 @@ namespace GameEditor_GraphView {
                         // Resizing buffers
                         _swapChain.ResizeBuffers(
                             _SwapDesc.BufferCount,
-                            2048,
-                            1280,
+                            //2048,
+                            //1280,
+                            _RenderForm.Width,
+                            _RenderForm.Height,
                             Format.B8G8R8A8_UNorm,
                             SwapChainFlags.None
                             );
@@ -252,8 +251,10 @@ namespace GameEditor_GraphView {
                             Format = Format.D32_Float_S8X24_UInt,
                             ArraySize = 1,
                             MipLevels = 1,
-                            Width = 2048,
-                            Height = 1280,
+                            //Width = 2048,
+                            //Height = 1280,
+                            Width = _RenderForm.Width,
+                            Height = _RenderForm.Height,
                             SampleDescription = new SampleDescription(1, 0),
                             Usage = ResourceUsage.Default,
                             BindFlags = BindFlags.DepthStencil,
@@ -273,6 +274,9 @@ namespace GameEditor_GraphView {
 
                         userResized = false;
                     }
+
+                    Thread vertexThread = new Thread(() => CalculateQuads(manager));
+                    vertexThread.Start();
 
                     // World Matrix     
                     // The World Matrix translates the position of your vertices from model space to World space. 
@@ -433,77 +437,33 @@ namespace GameEditor_GraphView {
         private void CalculateQuads(GraphView_StateManager manager) {
 
             int index = 0;
+
             try {
 
                 var item = ((GameEditor_GraphView.ViewModel.CurveGraphViewModel)manager.ViewModel).ModelItems.Item;
                 var curveList = item.Curve;
 
+                Console.WriteLine(_RenderForm.Width);
+                var grid = GraphGridV2.Draw(((ViewModel.CurveGraphViewModel)manager.ViewModel).Camera, _RenderForm.Width, _RenderForm.Height);                
+
+                int gridSeperator = item.Curve.Count;
                 vertices = null;
 
-                // Number of points minus 1, times the numbers of points for 2 triangles, 
+                Console.WriteLine(grid.Count + " is the grid count");
+                
+                // Number of points times the numbers of points for 2 triangles(6), 
                 // times vector attributes in shader (3 for location, 1 for color) 
-                vertices = new Vector4[(item.GetCount) * 18];
+                vertices = new Vector4[(item.GetCount + grid.Count) * 18];
 
-                // RGBA
                 var color = new Vector4(0.0f, 1.0f, 0.0f, 1.0f);
+                var gridColor = new Vector4(0.1f, 0.1f, 0.0f, 1.0f);
 
-                for (int j = 0; j < curveList.Count; j++) {
+                for (int i = 0; i < curveList.Count; i++) {
 
-                    var points = curveList[j].Points;                    
-
-                    for (int i = 0; i < points.Count - 2; i++) {
-
-                        Vector2 start = new Vector2((float)points[i].X, (float)points[i].Y);
-                        Vector2 end = new Vector2((float)points[i + 1].X, (float)points[i + 1].Y);
-
-                        // Calculate the angle between start and end using polar coordinates
-                        var tan = Math.Atan(((start.Y - end.Y) / (start.X - end.X)));
-
-                        List<System.Windows.Point> sList = new List<System.Windows.Point>();
-                        List<System.Windows.Point> eList = new List<System.Windows.Point>();
-
-                        float offset = 2.5f;
-
-                        sList.Add(new windows.Point(start.X, start.Y - offset));
-                        sList.Add(new windows.Point(start.X, start.Y + offset));
-
-                        eList.Add(new windows.Point(end.X, end.Y + offset));
-                        eList.Add(new windows.Point(end.X, end.Y - offset));
-
-                        sList = LerpMath.RotateAroundPoint(sList, new System.Windows.Point(start.X, start.Y), tan);
-                        eList = LerpMath.RotateAroundPoint(eList, new System.Windows.Point(end.X, end.Y), tan);
-
-
-                        // 2 triangles form one quad
-                        // Triangle 1
-                        vertices[index] = new Vector4((float)sList[0].X, (float)sList[0].Y, 1.0f, 1.0f);
-                        vertices[index + 1] = color;
-                        vertices[index + 2] = new Vector4(1.0f, 0.0f, 1.0f, 1.0f);
-
-                        vertices[index + 3] = new Vector4((float)sList[1].X, (float)sList[1].Y, 1.0f, 1.0f);
-                        vertices[index + 4] = color;
-                        vertices[index + 5] = new Vector4(0.0f, 0.0f, 1.0f, 1.0f);
-
-                        vertices[index + 6] = new Vector4((float)eList[0].X, (float)eList[0].Y, 1.0f, 1.0f);
-                        vertices[index + 7] = color;
-                        vertices[index + 8] = new Vector4(0.0f, 1.0f, 1.0f, 1.0f);
-
-                        //Triangle 2
-                        vertices[index + 9] = vertices[index + 6];
-                        vertices[index + 10] = color;
-                        vertices[index + 11] = vertices[index + 8];
-
-                        vertices[index + 15] = vertices[index];
-                        vertices[index + 16] = color;
-                        vertices[index + 17] = vertices[index + 2];
-
-                        vertices[index + 12] = new Vector4((float)eList[1].X, (float)eList[1].Y, 1.0f, 1.0f);
-                        vertices[index + 13] = color;
-                        vertices[index + 14] = new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-
-                        index += 18;
-                    }
+                    CalculateVertices(curveList[i].Points, ref index, color);
                 }
+
+                CalculateVertices(grid, ref index, gridColor, true);
 
             }
             catch (Exception) {
@@ -512,6 +472,62 @@ namespace GameEditor_GraphView {
             }
         }
 
+        private void CalculateVertices(List<windows.Point> points, ref int index, Vector4 color, bool IsGrid = false) {
+
+            int increment = 1;
+            float offset = 2.5f;
+            if (IsGrid) { increment = 2; offset = 1.0f; }
+
+            for (int i = 0; i < points.Count - 1; i += increment) {
+
+                Vector2 start = new Vector2((float)points[i].X, (float)points[i].Y);
+                Vector2 end = new Vector2((float)points[i + 1].X, (float)points[i + 1].Y);
+
+                // Calculate the angle between start and end using polar coordinates
+                var tan = Math.Atan(((start.Y - end.Y) / (start.X - end.X)));
+
+                List<System.Windows.Point> sList = new List<System.Windows.Point>();
+                List<System.Windows.Point> eList = new List<System.Windows.Point>();
+
+                sList.Add(new windows.Point(start.X, start.Y - offset));
+                sList.Add(new windows.Point(start.X, start.Y + offset));
+
+                eList.Add(new windows.Point(end.X, end.Y + offset));
+                eList.Add(new windows.Point(end.X, end.Y - offset));
+
+                sList = LerpMath.RotateAroundPoint(sList, new System.Windows.Point(start.X, start.Y), tan);
+                eList = LerpMath.RotateAroundPoint(eList, new System.Windows.Point(end.X, end.Y), tan);
+
+                // 2 triangles form one quad
+                // Triangle 1
+                vertices[index] = new Vector4((float)sList[0].X, (float)sList[0].Y, 1.0f, 1.0f);
+                vertices[index + 1] = color;
+                vertices[index + 2] = new Vector4(1.0f, 0.0f, 1.0f, 1.0f);
+
+                vertices[index + 3] = new Vector4((float)sList[1].X, (float)sList[1].Y, 1.0f, 1.0f);
+                vertices[index + 4] = color;
+                vertices[index + 5] = new Vector4(0.0f, 0.0f, 1.0f, 1.0f);
+
+                vertices[index + 6] = new Vector4((float)eList[0].X, (float)eList[0].Y, 1.0f, 1.0f);
+                vertices[index + 7] = color;
+                vertices[index + 8] = new Vector4(0.0f, 1.0f, 1.0f, 1.0f);
+
+                // Triangle 2
+                vertices[index + 9] = vertices[index + 6];
+                vertices[index + 10] = color;
+                vertices[index + 11] = vertices[index + 8];
+
+                vertices[index + 15] = vertices[index];
+                vertices[index + 16] = color;
+                vertices[index + 17] = vertices[index + 2];
+
+                vertices[index + 12] = new Vector4((float)eList[1].X, (float)eList[1].Y, 1.0f, 1.0f);
+                vertices[index + 13] = color;
+                vertices[index + 14] = new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+
+                index += 18;
+            }
+        }
 
         /// <summary>
         /// Updates Render Dimensions if window resized
@@ -565,8 +581,6 @@ namespace GameEditor_GraphView {
                         );
 
                         D2D1.BitmapRenderTarget tes = null;
-
-
 
                         tes = new D2D1.BitmapRenderTarget(
                             target,
@@ -633,9 +647,6 @@ namespace GameEditor_GraphView {
 
                                 dataStream.Read<byte>();
                             }
-
-
-
                         }
                     }
 
@@ -704,7 +715,7 @@ namespace GameEditor_GraphView {
                 for (int i = 0; i < points.Count; i++) {
 
                     // Converts point in D3D space to screen space
-                    //var vector = new Vector3((float)(points[i].X - camera.GetTransform(0, 0)), (float)(points[i].Y - camera.GetTransform(0, 1)), 1);
+                    // var vector = new Vector3((float)(points[i].X - camera.GetTransform(0, 0)), (float)(points[i].Y - camera.GetTransform(0, 1)), 1);
                     var vector = new Vector3((float)points[i].X, (float)points[i].Y, 1);
 
                     var space = Vector3.Project(vector, 0, 1, viewPort.Width, viewPort.Height, 0.0f, 100.0f, worldViewProj);
@@ -741,8 +752,6 @@ namespace GameEditor_GraphView {
             Utilities.Dispose(ref _ConstantBuffer);
             Utilities.Dispose(ref _VertexBuffer);
         }
-
-
 
 
         public void Dispose() {

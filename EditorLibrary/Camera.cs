@@ -23,6 +23,7 @@ namespace EditorLibrary {
                 };
 
             frustrumMatrix = new double[] {
+
                     tX + margin, tY + margin, tX - margin, tY - margin
                 };
         }
